@@ -1,86 +1,40 @@
-import sat from 'sat';
-// Import ServerConfig from '../configs/Server.js';
-// import QuadtreeManager from '../manager/QuadtreeManager.js';
-// import Manager from '../manager/Manager.js';
-// import TagOdering from '../configs/TagOrdering.js';
+// // Import ServerConfig from '../configs/Server.js';
+// // import QuadtreeManager from '../manager/QuadtreeManager.js';
+// // import Manager from '../manager/Manager.js';
+// // import TagOdering from '../configs/TagOrdering.js';
+import type {Response} from 'detect-collisions';
+import {System} from 'detect-collisions';
+import type Entity from '../entity/Entity.js';
 
 export default class World {
-	// QtSet = new QuadTreeSet<Sprite>();
-	entities = new Map<number, Human>();
+	entities = new Map<number, Entity>();
+	physics = new System();
 
-	constructor() {}
+	// 	Constructor() {}
 
-	nextTick(): void {
-		let entity;
-		for (let i = 0; i < this.entities.length; ++i) {
-			entity = this.entities[i];
+	nextTick(tick: number, deltaTime: number) {
+		this.entities.forEach((entity: Entity, id) => {
 			if (entity.markAsRemove) {
-				this.entities.findIndex;
-				continue;
+				this.physics.remove(entity.body);
+				this.entities.delete(id);
+				return;
 			}
 
-			sprite.update();
-			sprite.tick++;
-			this.QTManager.insert(sprite);
-			this.entities[i].update();
-		}
+			entity.update(this.add.bind(this), this.remove.bind(this));
+			this.physics.updateBody(entity.body);
+			this.physics.checkOne(entity.body, (response: Response) => {
+
+			});
+		});
 	}
 
-	add(sprite) {
-		const index = TagOdering.get(sprite.tag);
-		if (index != -1) {
-			this.sprites[index].push(sprite);
-		} else {
-			this.sprites.push(new Manager([sprite]));
-			TagOdering.push(sprite.tag);
-		}
+	add(entity: Entity) {
+		this.physics.insert(entity.body);
+		this.entities.set(entity.id, entity);
 	}
 
-	remove(sprite) {
-		const sm = this.getSpritesByTag(sprite.tag); // Sm = sprite manager
-		if (sm) {
-			sm.remove(sprite.id);
-		}
-	}
-
-	find(id) {
-		for (let i = 0; i < this.sprites.length; i++) {
-			const sprite = this.sprites[i].get(id);
-			if (sprite) {
-				return sprite;
-			}
-		}
-	}
-
-	filter(query, once = false) {
-		const out = [];
-		for (let i = 0; i < this.sprites.length; i++) {
-			for (let j = 0; j < this.sprites[i].length; j++) {
-				let found = true;
-				for (const property in query) {
-					if (this.sprites[i][j][property] != query[property]) {
-						found = false;
-						break;
-					}
-				}
-
-				if (found) {
-					if (once) {
-						return this.sprites[i][j];
-					}
-
-					out.push(this.sprites[i][j]);
-				}
-			}
-		}
-
-		return out;
-	}
-
-	static isTags(item1, item2, comparisonType) {
-		// Btw is not "By the way" but "Between"
-		return (
-			comparisonType.includes(item1.tag) || comparisonType.includes(item2.tag)
-		);
+	remove(entity: Entity) {
+		this.physics.remove(entity.body);
+		this.entities.delete(entity.id);
 	}
 }

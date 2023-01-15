@@ -1,1 +1,1 @@
-export {default as World} from './World';
+// Export {default as World} from './World';
