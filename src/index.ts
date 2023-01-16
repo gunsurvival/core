@@ -17,14 +17,15 @@
 // ===========`-.`___`-.__\ \___  /__.-'_.'_.-'================
 // export * as World from './world'
 import player from './entity/Player.js';
-import Entity from './entity/Entity.js';
 import World from './world/World.js';
-import {Circle} from 'detect-collisions';
-const pl = new (player(Entity))(new Circle({x: 1, y: 1}, 30, {}));
-const plq = new (player(Entity))(new Circle({x: 61, y: 1}, 30, {}));
+import Gunner from './entity/Gunner.js';
+import Bush from './entity/Bush.js';
+
+const gunner = new (player(Gunner))();
+const bush = new Bush();
 const world = new World();
-world.add(pl);
-world.add(plq);
+world.add(gunner);
+world.add(bush);
 
 function simulate(tps = 64) {
 	const deltaTime = 1000 / tps;
@@ -38,7 +39,7 @@ function simulate(tps = 64) {
 
 		accumulator += frameTime;
 		while (accumulator >= deltaTime) {
-			world.nextTick(tick, deltaTime);
+			world.nextTick({});
 			accumulator -= deltaTime;
 			tick += deltaTime;
 		}

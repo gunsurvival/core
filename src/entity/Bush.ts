@@ -3,9 +3,9 @@ import type {TickData} from '../types.js';
 import type World from '../world/World.js';
 import Entity from './Entity.js';
 
-export default class Gunner extends Entity {
+export default class Bush extends Entity {
 	constructor() {
-		super(new Circle({x: 1, y: 1}, 80, {}));
+		super(new Circle({x: 1, y: 1}, 50, {}));
 	}
 
 	update(world: World, tickData: TickData): void {

@@ -1,13 +1,16 @@
-export type PlayerState = {
-	moving: {
-		up: false;
-		down: false;
-		left: false;
-		right: false;
-	};
-	mouse: {
-		left: false;
-		right: false;
-		middle: false;
-	};
+import type {Circle, Ellipse, Polygon, Box, Line, Point} from 'detect-collisions';
+
+export type MouseState = {
+	left: boolean;
+	middle: boolean;
+	right: boolean;
+};
+
+export type CollisionShape = Circle | Ellipse | Polygon | Box | Line | Point;
+
+export type TickData = {
+	accumulator: number;
+	elapsedMs: number;
+	deltaMs: number;
+	delta: number;
 };

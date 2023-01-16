@@ -1,23 +1,23 @@
-import type {Circle, Ellipse, Polygon, Box, Line, Point, Response} from 'detect-collisions';
+import type {Response} from 'detect-collisions';
+import type {CollisionShape, TickData} from '../types.js';
 import safeId from '../util/safeId.js';
 import type World from '../world/World.js';
 
 export default class Entity {
 	id: number;
 	markAsRemove = false;
-	tick = 0;
+	elapsedTick = 0;
 	constructor(
-		public body: Circle | Ellipse | Polygon | Box | Line | Point,
+		public body: CollisionShape,
 	) {
 		this.id = safeId();
-		// This.body = body;
 	}
 
 	update(
-		add: World['add'],
-		remove: World['remove'],
+		world: World,
+		tickData: TickData,
 	) {
-		this.tick++;
+		this.elapsedTick++;
 	}
 
 	get plain() {
