@@ -1,5 +1,5 @@
-import type {Response} from 'detect-collisions';
-import type {CollisionShape, TickData} from '../types.js';
+import type {Response, Body} from 'detect-collisions';
+import type {TickData} from '../types.js';
 import safeId from '../util/safeId.js';
 import type World from '../world/World.js';
 
@@ -8,7 +8,7 @@ export default class Entity {
 	markAsRemove = false;
 	elapsedTick = 0;
 	constructor(
-		public body: CollisionShape,
+		public body: Body,
 	) {
 		this.id = safeId();
 	}

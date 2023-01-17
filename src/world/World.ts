@@ -10,7 +10,7 @@ function concatenate(a: number, b: number, base = 10) {
 export default class World {
 	entities = new Map<number, Entity>();
 	physics = new System();
-	collisionHashMap = new Map<number, Response>();
+	collisionHashMap = new Map<number, number>();
 
 	// 	Constructor() {}
 
@@ -26,23 +26,19 @@ export default class World {
 			entity.update(this, tickData);
 			this.physics.updateBody(entity.body);
 			this.physics.checkOne(entity.body, (response: Response) => {
-				const uniq1 = concatenate(entity.id, (response.b as Entity).id);
-				const uniq2 = concatenate((response.b as Entity).id, entity.id);
-				if (this.collisionHashMap.has(uniq1) || this.collisionHashMap.has(uniq2)) {
+				const uniq = concatenate(entity.id, (response.b as Entity).id);
+				if (this.collisionHashMap.has(uniq)) {
 					entity.onCollisionStay(response.a as Entity, response);
-					(response.a as Entity).onCollisionStay(entity, response);
 				} else {
-					this.collisionHashMap.set(uniq1, response);
-					newCollisionHashMap.set(uniq1, true);
+					this.collisionHashMap.set(uniq, entity.id);
+					newCollisionHashMap.set(uniq, true);
 					entity.onCollisionEnter(response.a as Entity, response);
-					(response.a as Entity).onCollisionEnter(entity, response);
 				}
 			});
 		});
-		this.collisionHashMap.forEach((response: Response, uniq: number) => {
+		this.collisionHashMap.forEach((entityId: number, uniq: number) => {
 			if (!newCollisionHashMap.has(uniq)) {
-				(response.a as Entity).onCollisionExit(response.b as Entity, response);
-				(response.b as Entity).onCollisionExit(response.a as Entity, response);
+				this.entities.get(entityId).onCollisionExit(, response);
 			}
 		});
 	}

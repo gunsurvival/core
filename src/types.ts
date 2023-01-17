@@ -6,8 +6,6 @@ export type MouseState = {
 	right: boolean;
 };
 
-export type CollisionShape = Circle | Ellipse | Polygon | Box | Line | Point;
-
 export type TickData = {
 	accumulator: number;
 	elapsedMs: number;
