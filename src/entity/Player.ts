@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import SAT from 'sat';
 import type {TickData} from '../types.js';
 import type World from '../world/World.js';
@@ -68,11 +69,6 @@ export default function player<T extends Constructor<Entity>>(Base: T) {
 			x: 0,
 			y: 0,
 		};
-
-		constructor(...args: any[]) {
-			super(...args);
-			console.log(this.id);
-		}
 
 		update(world: World, tickData: TickData) {
 			super.update(world, tickData);

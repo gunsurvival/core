@@ -8,10 +8,8 @@ export default class Bush extends Entity {
 		super(new Circle({x: 1, y: 1}, 50, {}));
 	}
 
-	update(world: World, tickData: TickData): void {
+	update(world: World, tickData: TickData) {
 		super.update(world, tickData);
-		// This.body.x = 100.0 + (Math.cos(tickData.elapsedMs / 200.0) * 100.0);
-		// this.body.y = 100.0 + (Math.sin(tickData.elapsedMs / 200.0) * 100.0);
 	}
 
 	get plain() {

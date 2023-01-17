@@ -1,7 +1,12 @@
-import {type Response} from 'detect-collisions';
 import {System, type Response} from 'detect-collisions';
 import type Entity from '../entity/Entity.js';
 import {type TickData} from '../types.js';
+
+type BodyRefEntity = Body & {entityRef: Entity};
+type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
+	a: BodyRefEntity;
+	b: BodyRefEntity;
+};
 
 function concatenate(a: number, b: number, base = 10) {
 	return (a * (base ** (Math.floor(Math.log(b) / Math.log(base)) + 1))) + b;
@@ -10,12 +15,13 @@ function concatenate(a: number, b: number, base = 10) {
 export default class World {
 	entities = new Map<number, Entity>();
 	physics = new System();
-	collisionHashMap = new Map<number, number>();
+	collisionHashMap = new Map<number, Response>();
+	newCollisionHashMap = new Map<number, Response>();
 
 	// 	Constructor() {}
 
 	nextTick(tickData: TickData) {
-		const newCollisionHashMap = new Map<number, boolean>();
+		this.newCollisionHashMap.clear();
 		this.entities.forEach((entity: Entity, id) => {
 			if (entity.markAsRemove) {
 				this.physics.remove(entity.body);
@@ -25,20 +31,21 @@ export default class World {
 
 			entity.update(this, tickData);
 			this.physics.updateBody(entity.body);
-			this.physics.checkOne(entity.body, (response: Response) => {
-				const uniq = concatenate(entity.id, (response.b as Entity).id);
+
+			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
+				const uniq = concatenate(entity.id, response.b.entityRef.id);
 				if (this.collisionHashMap.has(uniq)) {
-					entity.onCollisionStay(response.a as Entity, response);
+					entity.onCollisionStay(response.b.entityRef, response);
 				} else {
-					this.collisionHashMap.set(uniq, entity.id);
-					newCollisionHashMap.set(uniq, true);
-					entity.onCollisionEnter(response.a as Entity, response);
+					this.collisionHashMap.set(uniq, response);
+					this.newCollisionHashMap.set(uniq, response);
+					entity.onCollisionEnter(response.b.entityRef, response);
 				}
 			});
 		});
-		this.collisionHashMap.forEach((entityId: number, uniq: number) => {
-			if (!newCollisionHashMap.has(uniq)) {
-				this.entities.get(entityId).onCollisionExit(, response);
+		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: number) => {
+			if (!this.newCollisionHashMap.has(uniq)) {
+				response.a.entityRef.onCollisionExit(response.b.entityRef, response);
 			}
 		});
 	}
@@ -46,6 +53,7 @@ export default class World {
 	add(entity: Entity) {
 		this.physics.insert(entity.body);
 		this.entities.set(entity.id, entity);
+		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
 	}
 
 	remove(entity: Entity) {
