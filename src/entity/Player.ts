@@ -29,11 +29,6 @@ export type IPlayer = {
 			right: boolean;
 		};
 	};
-
-	pointer: {
-		x: number;
-		y: number;
-	};
 };
 
 type Constructor<T> = new(...args: any[]) => T;
@@ -65,11 +60,6 @@ export default function player<T extends Constructor<Entity>>(Base: T) {
 			},
 		};
 
-		pointer = {
-			x: 0,
-			y: 0,
-		};
-
 		update(world: World, tickData: TickData) {
 			super.update(world, tickData);
 			const vel = this.getSpeedV().scale(tickData.delta);
@@ -77,10 +67,6 @@ export default function player<T extends Constructor<Entity>>(Base: T) {
 				this.body.x + vel.x,
 				this.body.y + vel.y,
 			);
-			this.body.setAngle(Math.atan2(
-				this.pointer.y - this.body.y,
-				this.pointer.x - this.body.x,
-			));
 		}
 
 		getSpeedV() {

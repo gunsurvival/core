@@ -1,4 +1,4 @@
-import {Circle} from 'detect-collisions';
+import {Circle, type Response} from 'detect-collisions';
 import type {TickData} from '../types.js';
 import type World from '../world/World.js';
 import Entity from './Entity.js';

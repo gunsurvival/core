@@ -34,18 +34,22 @@ export default class World {
 
 			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
 				const uniq = concatenate(entity.id, response.b.entityRef.id);
+				this.newCollisionHashMap.set(uniq, response);
 				if (this.collisionHashMap.has(uniq)) {
+					console.log('stay');
 					entity.onCollisionStay(response.b.entityRef, response);
 				} else {
 					this.collisionHashMap.set(uniq, response);
-					this.newCollisionHashMap.set(uniq, response);
 					entity.onCollisionEnter(response.b.entityRef, response);
+					console.log('enter');
 				}
 			});
 		});
 		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: number) => {
 			if (!this.newCollisionHashMap.has(uniq)) {
+				console.log('exit');
 				response.a.entityRef.onCollisionExit(response.b.entityRef, response);
+				this.collisionHashMap.delete(uniq);
 			}
 		});
 	}

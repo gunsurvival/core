@@ -1,4 +1,4 @@
-const index = 0;
+let index = 0;
 export default function safeId() {
-	return Math.random();
+	return ++index;
 }
