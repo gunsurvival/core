@@ -22,6 +22,7 @@ export default class World {
 
 	nextTick(tickData: TickData) {
 		this.newCollisionHashMap.clear();
+
 		this.entities.forEach((entity: Entity, id) => {
 			if (entity.markAsRemove) {
 				this.physics.remove(entity.body);
@@ -29,6 +30,7 @@ export default class World {
 				return;
 			}
 
+			entity.baseUpdate(this, tickData);
 			entity.update(this, tickData);
 			this.physics.updateBody(entity.body);
 
@@ -58,6 +60,7 @@ export default class World {
 		this.physics.insert(entity.body);
 		this.entities.set(entity.id, entity);
 		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
+		// Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
 	}
 
 	remove(entity: Entity) {

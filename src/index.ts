@@ -16,14 +16,15 @@
 //           \  \ `-.   \_\_`. _.'_/_/  -' _.' /
 // ===========`-.`___`-.__\ \___  /__.-'_.'_.-'================
 // export * as World from './world'
-import player from './entity/Player.js';
 import World from './world/World.js';
 import Gunner from './entity/Gunner.js';
 import Bush from './entity/Bush.js';
+import Player from './player/Player.World.js';
 
-const gunner = new (player(Gunner))();
+const gunner = new Gunner();
 const bush = new Bush();
 const world = new World();
+const player = new Player(gunner);
 world.add(gunner);
 world.add(bush);
 
