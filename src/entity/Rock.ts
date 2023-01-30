@@ -1,15 +1,27 @@
-import {Circle, type Response} from 'detect-collisions';
+import {type BodyOptions, Circle, type Response, type Body} from 'detect-collisions';
 import Entity from './Entity.js';
+import getStats from '../stats.js';
+import {type TickData} from '../types.js';
+import type World from '../world/World.js';
+
+export type IStatsRock = {
+	radius: number;
+};
 
 export default class Rock extends Entity {
-	constructor() {
-		super(new Circle({x: 300, y: 300}, 55, {}));
+	body: Body;
+	stats = getStats<IStatsRock>('Rock');
+	constructor(pos: SAT.Vector, bodyOptions: BodyOptions = {}) {
+		super();
+		this.body = new Circle(pos, this.stats.radius, bodyOptions);
 	}
 
-	get plain() {
-		return {
+	update(world: World, tickData: TickData): void {
 
-		};
+	}
+
+	onCreate(): void {
+
 	}
 
 	onCollisionEnter(other: Entity, response: Response) {
