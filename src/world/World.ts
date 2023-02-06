@@ -1,5 +1,6 @@
+import {type, Schema, MapSchema} from '@colyseus/schema';
 import {System, type Response} from 'detect-collisions';
-import type Entity from '../entity/Entity.js';
+import Entity from '../entity/Entity.js';
 import {type TickData} from '../types.js';
 
 type BodyRefEntity = Body & {entityRef: Entity};
@@ -13,10 +14,10 @@ function concatenate(a: number, b: number, base = 10) {
 }
 
 export default class World {
-	entities = new Map<number, Entity>();
-	physics = new System();
+	@type({map: Entity}) entities = new MapSchema<Entity>();
 	collisionHashMap = new Map<number, Response>();
 	newCollisionHashMap = new Map<number, Response>();
+	physics = new System();
 
 	// 	Constructor() {}
 
@@ -38,18 +39,15 @@ export default class World {
 				const uniq = concatenate(entity.id, response.b.entityRef.id);
 				this.newCollisionHashMap.set(uniq, response);
 				if (this.collisionHashMap.has(uniq)) {
-					console.log('stay');
 					entity.onCollisionStay(response.b.entityRef, response);
 				} else {
 					this.collisionHashMap.set(uniq, response);
 					entity.onCollisionEnter(response.b.entityRef, response);
-					console.log('enter');
 				}
 			});
 		});
 		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: number) => {
 			if (!this.newCollisionHashMap.has(uniq)) {
-				console.log('exit');
 				response.a.entityRef.onCollisionExit(response.b.entityRef, response);
 				this.collisionHashMap.delete(uniq);
 			}
@@ -58,13 +56,15 @@ export default class World {
 
 	add(entity: Entity) {
 		this.physics.insert(entity.body);
-		this.entities.set(entity.id, entity);
+		this.entities.set(entity.id.toString(), entity);
+		entity.onInit(this);
 		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
 		// Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
 	}
 
 	remove(entity: Entity) {
 		this.physics.remove(entity.body);
-		this.entities.delete(entity.id);
+		this.entities.delete(entity.id.toString());
+		entity.onDestroy(this);
 	}
 }

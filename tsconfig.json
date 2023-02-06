@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"experimentalDecorators": true,
 		"target": "esnext",
 		"allowJs": true,
 		"skipLibCheck": true,

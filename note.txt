@@ -57,3 +57,5 @@ server: sync ticks, neu behind qua nhieu ticks thi skip het
 
         render( state );
     }
+
+MỖI entity có các thuộc tính của riêng và define = decorator @type, thay vì refefine lại hết SATBody

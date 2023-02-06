@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@colyseus/schema@^1.0.45":
+  version "1.0.45"
+  resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-1.0.45.tgz#055233a75064fd558f90ae5cf1510812f1052ac2"
+  integrity sha512-oW8126BOZMtf0ryuoarbeSnhmthEtrwsFwLVtVmam8IhrimEi9VGPs5GNMVo+rHcnUH1x+5j9MDZNaCq5h1OdA==
+
 "@eslint/eslintrc@^1.4.1":
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-1.4.1.tgz#af58772019a2d271b7e2d4c23ff4ddcba3ccfb3e"

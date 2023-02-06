@@ -1,23 +1,32 @@
-import type {Response, Body} from 'detect-collisions';
-import {type Effect} from '../effect/Effect.js';
+import {type, Schema} from '@colyseus/schema';
+import {type Body} from 'detect-collisions';
+import type {Response} from 'detect-collisions';
+import Effect from '../effect/Effect.js';
 import type {TickData} from '../types.js';
 import safeId from '../util/safeId.js';
 import type World from '../world/World.js';
 import getStats from '../stats.js';
 
-// Them implements co stats + body, de ra ngoai thay vi xai super()
+export class Position extends Schema {
+	@type('number') x: number;
+	@type('number') y: number;
+}
 
-export default abstract class Entity {
-	id = safeId();
-	effects: Effect[] = [];
-	markAsRemove = false;
-	elapsedTick = 0;
+// Redefine Body in colyseus Schema to use fosil-delta
+export class BodyStateSchema extends Schema {
+	@type(Position) pos: Position;
+    @type('number') angle: number;
+}
+
+export default abstract class Entity extends Schema {
+	@type('number') id: number = safeId();
+	@type([Effect]) effects: Effect[] = [];
+	@type('boolean') markAsRemove = false;
+	@type('number') elapsedTick = 0;
+	@type(BodyStateSchema) bodyState: BodyStateSchema;
+
 	abstract body: Body;
 	abstract stats: unknown; // Need to be re-define in child class
-
-	constructor() {
-		this.onCreate();
-	}
 
 	baseUpdate(world: World, tickData: TickData) {
 		this.elapsedTick++;
@@ -35,12 +44,17 @@ export default abstract class Entity {
 		}
 	}
 
+	finalUpdate(world: World, tickData: TickData) {
+        this.
+	}
+
 	destroy() {
 		this.markAsRemove = true;
 	}
 
 	abstract update(world: World, tickData: TickData): void;
-	abstract onCreate(): void;
+	abstract onInit(world: World): void; // Call when entity is added to world
+	abstract onDestroy(world: World): void; // Call when entity is removed from world
 	abstract onCollisionEnter(other: Entity, response: Response): void;
 	abstract onCollisionStay(other: Entity, response: Response): void;
 	abstract onCollisionExit(other: Entity, response: Response): void;
