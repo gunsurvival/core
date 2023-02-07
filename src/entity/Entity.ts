@@ -7,15 +7,9 @@ import safeId from '../util/safeId.js';
 import type World from '../world/World.js';
 import getStats from '../stats.js';
 
-export class Position extends Schema {
+export class VectorSchema extends Schema {
 	@type('number') x: number;
 	@type('number') y: number;
-}
-
-// Redefine Body in colyseus Schema to use fosil-delta
-export class BodyStateSchema extends Schema {
-	@type(Position) pos: Position;
-    @type('number') angle: number;
 }
 
 export default abstract class Entity extends Schema {
@@ -23,7 +17,10 @@ export default abstract class Entity extends Schema {
 	@type([Effect]) effects: Effect[] = [];
 	@type('boolean') markAsRemove = false;
 	@type('number') elapsedTick = 0;
-	@type(BodyStateSchema) bodyState: BodyStateSchema;
+	@type(VectorSchema) pos: VectorSchema = new VectorSchema().assign({x: 0, y: 0});
+	@type('number') scale: number;
+	@type('number') angle: number;
+	@type(VectorSchema) offset: VectorSchema = new VectorSchema().assign({x: 0, y: 0});
 
 	abstract body: Body;
 	abstract stats: unknown; // Need to be re-define in child class
@@ -31,7 +28,7 @@ export default abstract class Entity extends Schema {
 	baseUpdate(world: World, tickData: TickData) {
 		this.elapsedTick++;
 		this.stats = getStats(this.constructor.name);
-		// Interate over effects and calculate them
+		// Iterate over effects and calculate them
 		// if effect is done or marked as remove, remove it
 		for (let i = 0; i < this.effects.length; i++) {
 			if (this.effects[i].markAsRemove) {
@@ -45,7 +42,12 @@ export default abstract class Entity extends Schema {
 	}
 
 	finalUpdate(world: World, tickData: TickData) {
-        this.
+		this.pos.x = this.body.pos.x;
+		this.pos.y = this.body.pos.y;
+		this.angle = this.body.angle;
+		this.scale = this.body.scale;
+		this.offset.x = this.body.offset.x;
+		this.offset.y = this.body.offset.y;
 	}
 
 	destroy() {

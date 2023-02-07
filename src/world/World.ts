@@ -1,4 +1,4 @@
-import {type, Schema, MapSchema} from '@colyseus/schema';
+import {type, filterChildren, Schema, MapSchema} from '@colyseus/schema';
 import {System, type Response} from 'detect-collisions';
 import Entity from '../entity/Entity.js';
 import {type TickData} from '../types.js';
@@ -13,8 +13,21 @@ function concatenate(a: number, b: number, base = 10) {
 	return (a * (base ** (Math.floor(Math.log(b) / Math.log(base)) + 1))) + b;
 }
 
-export default class World {
-	@type({map: Entity}) entities = new MapSchema<Entity>();
+export default class World extends Schema {
+	@filterChildren((client, key: string, value: Entity, root: World) => {
+		const currentPlayer = root.entities.get(client.userData.entityId as string);
+		if (currentPlayer) {
+			const a = value.pos.x - currentPlayer.pos.x;
+			const b = value.pos.y - currentPlayer.pos.y;
+
+			return (Math.sqrt((a * a) + (b * b))) <= 1366;
+		}
+
+		return false;
+	})
+	@type({map: Entity})
+		entities = new MapSchema<Entity>();
+
 	collisionHashMap = new Map<number, Response>();
 	newCollisionHashMap = new Map<number, Response>();
 	physics = new System();
@@ -32,11 +45,11 @@ export default class World {
 			}
 
 			entity.baseUpdate(this, tickData);
-			entity.update(this, tickData);
+			entity.update(this, tickData); // User defined update
 			this.physics.updateBody(entity.body);
 
 			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
-				const uniq = concatenate(entity.id, response.b.entityRef.id);
+				const uniq = concatenate(Number(id), response.b.entityRef.id);
 				this.newCollisionHashMap.set(uniq, response);
 				if (this.collisionHashMap.has(uniq)) {
 					entity.onCollisionStay(response.b.entityRef, response);
@@ -45,6 +58,8 @@ export default class World {
 					entity.onCollisionEnter(response.b.entityRef, response);
 				}
 			});
+
+			entity.finalUpdate(this, tickData);
 		});
 		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: number) => {
 			if (!this.newCollisionHashMap.has(uniq)) {
