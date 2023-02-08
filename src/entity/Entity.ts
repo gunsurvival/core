@@ -13,7 +13,7 @@ export class VectorSchema extends Schema {
 }
 
 export default abstract class Entity extends Schema {
-	@type('number') id: number = safeId();
+	@type('string') id = String(safeId());
 	@type([Effect]) effects: Effect[] = [];
 	@type('boolean') markAsRemove = false;
 	@type('number') elapsedTick = 0;
@@ -22,6 +22,7 @@ export default abstract class Entity extends Schema {
 	@type('number') angle: number;
 	@type(VectorSchema) offset: VectorSchema = new VectorSchema().assign({x: 0, y: 0});
 
+	name: string = this.constructor.name;
 	abstract body: Body;
 	abstract stats: unknown; // Need to be re-define in child class
 
@@ -55,8 +56,8 @@ export default abstract class Entity extends Schema {
 	}
 
 	abstract update(world: World, tickData: TickData): void;
-	abstract onInit(world: World): void; // Call when entity is added to world
-	abstract onDestroy(world: World): void; // Call when entity is removed from world
+	abstract onInit(world: World): void; // Call after entity is added to world
+	abstract onDestroy(world: World): void; // Call after entity is removed from world
 	abstract onCollisionEnter(other: Entity, response: Response): void;
 	abstract onCollisionStay(other: Entity, response: Response): void;
 	abstract onCollisionExit(other: Entity, response: Response): void;

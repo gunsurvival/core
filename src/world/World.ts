@@ -28,8 +28,8 @@ export default class World extends Schema {
 	@type({map: Entity})
 		entities = new MapSchema<Entity>();
 
-	collisionHashMap = new Map<number, Response>();
-	newCollisionHashMap = new Map<number, Response>();
+	collisionHashMap = new Map<string, Response>();
+	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
 
 	// 	Constructor() {}
@@ -49,7 +49,7 @@ export default class World extends Schema {
 			this.physics.updateBody(entity.body);
 
 			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
-				const uniq = concatenate(Number(id), response.b.entityRef.id);
+				const uniq = id + response.b.entityRef.id;
 				this.newCollisionHashMap.set(uniq, response);
 				if (this.collisionHashMap.has(uniq)) {
 					entity.onCollisionStay(response.b.entityRef, response);
@@ -61,7 +61,7 @@ export default class World extends Schema {
 
 			entity.finalUpdate(this, tickData);
 		});
-		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: number) => {
+		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: string) => {
 			if (!this.newCollisionHashMap.has(uniq)) {
 				response.a.entityRef.onCollisionExit(response.b.entityRef, response);
 				this.collisionHashMap.delete(uniq);
@@ -71,7 +71,7 @@ export default class World extends Schema {
 
 	add(entity: Entity) {
 		this.physics.insert(entity.body);
-		this.entities.set(entity.id.toString(), entity);
+		this.entities.set(entity.id, entity);
 		entity.onInit(this);
 		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
 		// Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
@@ -79,7 +79,7 @@ export default class World extends Schema {
 
 	remove(entity: Entity) {
 		this.physics.remove(entity.body);
-		this.entities.delete(entity.id.toString());
+		this.entities.delete(entity.id);
 		entity.onDestroy(this);
 	}
 }
