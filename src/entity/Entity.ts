@@ -13,16 +13,16 @@ export class VectorSchema extends Schema {
 }
 
 export default abstract class Entity extends Schema {
-	@type('string') id = String(safeId());
-	@type([Effect]) effects: Effect[] = [];
-	@type('boolean') markAsRemove = false;
-	@type('number') elapsedTick = 0;
-	@type(VectorSchema) pos: VectorSchema = new VectorSchema().assign({x: 0, y: 0});
 	@type('number') scale: number;
 	@type('number') angle: number;
+	@type([Effect]) effects: Effect[] = [];
+	@type(VectorSchema) pos: VectorSchema = new VectorSchema().assign({x: 0, y: 0});
 	@type(VectorSchema) offset: VectorSchema = new VectorSchema().assign({x: 0, y: 0});
 
+	id = String(safeId());
 	name: string = this.constructor.name;
+	markAsRemove = false;
+	elapsedTick = 0;
 	abstract body: Body;
 	abstract stats: unknown; // Need to be re-define in child class
 
