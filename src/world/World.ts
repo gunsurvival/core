@@ -9,10 +9,6 @@ type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
 	b: BodyRefEntity;
 };
 
-function concatenate(a: number, b: number, base = 10) {
-	return (a * (base ** (Math.floor(Math.log(b) / Math.log(base)) + 1))) + b;
-}
-
 export default class World extends Schema {
 	@filterChildren((client, key: string, value: Entity, root: World) => {
 		const currentPlayer = root.entities.get(client.userData.entityId as string);
