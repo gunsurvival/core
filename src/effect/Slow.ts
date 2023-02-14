@@ -1,8 +1,9 @@
 import {type TickData} from '../types.js';
-import {Effect} from './Effect.js';
+import type World from '../world/World.js';
+import Effect from './Effect.js';
 
-class Slow extends Effect {
-	calc(attribute: any, tickData: TickData): void {
-
+export default class Slow extends Effect {
+	calc(stats: unknown, world: World, tickData: TickData) {
+		// Calc here
 	}
 }

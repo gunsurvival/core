@@ -1,15 +1,15 @@
 import {type, Schema} from '@colyseus/schema';
-import {type TickData} from '../types.js';
-import safeId from '../util/safeId.js';
-import type World from '../world/World.js';
+import {type TickData} from '../types';
+import {safeId} from '../util/safeId';
+import type World from '../world/World';
 
-export default class Effect extends Schema {
+export default abstract class Effect extends Schema {
 	@type('number') id: number = safeId();
 	@type('boolean') markAsRemove = false;
-
-	calc(stats: unknown, world: World, tickData: TickData) {}
 
 	destroy() {
 		this.markAsRemove = true;
 	}
+
+	abstract calc(stats: unknown, world: World, tickData: TickData): void;
 }
