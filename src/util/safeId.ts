@@ -1,4 +1,4 @@
 let index = 0;
-export default function safeId() {
+export function safeId() {
 	return ++index;
 }

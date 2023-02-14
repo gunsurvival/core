@@ -3,7 +3,7 @@ import {type Body} from 'detect-collisions';
 import type {Response} from 'detect-collisions';
 import Effect from '../effect/Effect.js';
 import type {TickData} from '../types.js';
-import safeId from '../util/safeId.js';
+import {safeId} from '../util/safeId.js';
 import type World from '../world/World.js';
 import getStats from '../stats.js';
 
