@@ -1,5 +1,5 @@
-const index = 0;
-export default function safeId() {
-    return Math.random();
+let index = 0;
+export function safeId() {
+    return ++index;
 }
 //# sourceMappingURL=safeId.js.map

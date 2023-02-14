@@ -5,4 +5,4 @@ export * as World from './world';
 export * as Util from './util';
 export * from './stats';
 export * from './types';
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.d.ts.map

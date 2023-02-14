@@ -1,1 +1,1 @@
-{"version":3,"file":"safeId.js","sourceRoot":"","sources":["../../src/util/safeId.ts"],"names":[],"mappings":"AAAA,MAAM,KAAK,GAAG,CAAC,CAAC;AAChB,MAAM,CAAC,OAAO,UAAU,MAAM;IAC7B,OAAO,IAAI,CAAC,MAAM,EAAE,CAAC;AACtB,CAAC"}
+{"version":3,"file":"safeId.js","sourceRoot":"","sources":["../../src/util/safeId.ts"],"names":[],"mappings":"AAAA,IAAI,KAAK,GAAG,CAAC,CAAC;AACd,MAAM,UAAU,MAAM;IACrB,OAAO,EAAE,KAAK,CAAC;AAChB,CAAC"}
