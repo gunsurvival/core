@@ -1,15 +1,14 @@
-import {type, Schema} from '@colyseus/schema';
-import {type TickData} from '../types';
-import {safeId} from '../util/safeId';
+import type {ITickData} from '../types';
+import {safeId} from '../util';
 import type World from '../world/World';
 
-export default abstract class Effect extends Schema {
-	@type('number') id: number = safeId();
-	@type('boolean') markAsRemove = false;
+export default abstract class Effect {
+	id: number = safeId();
+	markAsRemove = false;
 
 	destroy() {
 		this.markAsRemove = true;
 	}
 
-	abstract calc(stats: unknown, world: World, tickData: TickData): void;
+	abstract calc(stats: unknown, world: World, tickData: ITickData): void;
 }

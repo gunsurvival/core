@@ -1,24 +1,23 @@
-import {type, Schema} from '@colyseus/schema';
-import {type BodyOptions, Circle, type Response, type Body} from 'detect-collisions';
+import {type BodyOptions, type Response, type Body, Circle} from 'detect-collisions';
 import getStats from '../stats.js';
-import type {TickData} from '../types.js';
+import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
 import Entity from './Entity.js';
 
-export class StatsBush extends Schema {
-	@type('number') radius: number;
-}
+export type StatsBush = {
+	radius: number;
+};
 
 export default class Bush extends Entity {
-	@type(StatsBush) stats = getStats<StatsBush>('Bush');
-	body: Body;
+	stats = getStats<StatsBush>('Bush');
+	rigid: Body;
 
 	constructor(pos: SAT.Vector, bodyOptions: BodyOptions = {}) {
 		super();
-		this.body = new Circle(pos, this.stats.radius, bodyOptions);
+		this.rigid = new Circle(pos, this.stats.radius, bodyOptions);
 	}
 
-	update(world: World, tickData: TickData) {}
+	update(world: World, tickData: ITickData) {}
 
 	onInit() {}
 	onDestroy() {}

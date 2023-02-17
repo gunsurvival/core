@@ -1,21 +1,20 @@
-import {type, Schema} from '@colyseus/schema';
-import {Body, Circle, type Response} from 'detect-collisions';
-import getStats from '../stats.js';
-import type {TickData} from '../types.js';
-import type World from '../world/World.js';
+import {Circle, type Response} from 'detect-collisions';
+import getStats from '../stats';
+import type {ITickData} from '../types';
+import type World from '../world/World';
 import Entity from './Entity.js';
 
-export class StatsGunner extends Schema {
-	@type('number') health: number;
-	@type('number') speed: number;
-	@type('number') radius: number;
-}
+export type StatsGunner = {
+	health: number;
+	speed: number;
+	radius: number;
+};
 
 export default class Gunner extends Entity {
-	@type(StatsGunner) stats = getStats<StatsGunner>('Gunner');
-	body = new Circle({x: 1, y: 1}, 80, {});
+	stats = getStats<StatsGunner>('Gunner');
+	rigid = new Circle({x: 1, y: 1}, 80, {});
 
-	update(world: World, tickData: TickData): void {}
+	update(world: World, tickData: ITickData): void {}
 	onInit() {}
 	onDestroy() {}
 	onCollisionEnter(other: Entity, response: Response) {}

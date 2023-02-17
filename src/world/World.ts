@@ -1,7 +1,7 @@
-import {type, filterChildren, Schema, MapSchema} from '@colyseus/schema';
 import {System, type Response} from 'detect-collisions';
-import Entity from '../entity/Entity.js';
-import {type TickData} from '../types.js';
+import type Entity from '../entity/Entity';
+import {type ITickData} from '../types';
+import {MutateArray} from '../util';
 
 type BodyRefEntity = Body & {entityRef: Entity};
 type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
@@ -9,43 +9,43 @@ type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
 	b: BodyRefEntity;
 };
 
-export default class World extends Schema {
-	@filterChildren((client, key: string, value: Entity, root: World) => {
-		const currentPlayer = root.entities.get(client.userData.entityId as string);
-		if (currentPlayer) {
-			const a = value.pos.x - currentPlayer.pos.x;
-			const b = value.pos.y - currentPlayer.pos.y;
+export default abstract class World {
+	// @filterChildren((client, key: string, entity: Entity, root: World) => {
+	// 	const currentPlayer = root.entities.get(client.userData.entityId as string);
+	// 	if (currentPlayer) {
+	// 		const a = entity.rigid.pos.x - currentPlayer.rigid.pos.x;
+	// 		const b = entity.rigid.pos.y - currentPlayer.rigid.pos.y;
 
-			return (Math.sqrt((a * a) + (b * b))) <= 1366;
-		}
+	// 		return (Math.sqrt((a * a) + (b * b))) <= 1366;
+	// 	}
 
-		return false;
-	})
-	@type({map: Entity})
-		entities = new MapSchema<Entity>();
-
+	// 	return false;
+	// })
+	entities = new MutateArray<Entity>();
+	// TODO: Them mutateMap nua
+	// TODO: Sua tat ca filke trong core
 	collisionHashMap = new Map<string, Response>();
 	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
 
 	// 	Constructor() {}
 
-	nextTick(tickData: TickData) {
+	nextTick(tickData: ITickData) {
 		this.newCollisionHashMap.clear();
 
 		this.entities.forEach((entity: Entity, id) => {
 			if (entity.markAsRemove) {
-				this.physics.remove(entity.body);
-				this.entities.delete(id);
+				this.physics.remove(entity.rigid);
+				this.entities.remove(entity);
 				return;
 			}
 
-			entity.baseUpdate(this, tickData);
+			entity.beforeUpdate(this, tickData);
 			entity.update(this, tickData); // User defined update
-			this.physics.updateBody(entity.body);
+			this.physics.updateBody(entity.rigid);
 
-			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
-				const uniq = id + response.b.entityRef.id;
+			this.physics.checkOne(entity.rigid, ({...response}: ResponseBodyRefEntity) => {
+				const uniq = String(id) + response.b.entityRef.id;
 				this.newCollisionHashMap.set(uniq, response);
 				if (this.collisionHashMap.has(uniq)) {
 					entity.onCollisionStay(response.b.entityRef, response);
@@ -55,7 +55,7 @@ export default class World extends Schema {
 				}
 			});
 
-			entity.finalUpdate(this, tickData);
+			entity.afterUpdate(this, tickData);
 		});
 		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: string) => {
 			if (!this.newCollisionHashMap.has(uniq)) {

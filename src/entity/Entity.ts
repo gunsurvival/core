@@ -1,40 +1,27 @@
-import {type, Schema} from '@colyseus/schema';
-import {type Body} from 'detect-collisions';
-import type {Response} from 'detect-collisions';
-import Effect from '../effect/Effect.js';
-import type {TickData} from '../types.js';
-import {safeId} from '../util/safeId.js';
-import type World from '../world/World.js';
-import getStats from '../stats.js';
+import type {Body, Response} from 'detect-collisions';
+import type {ITickData} from '../types';
+import type Effect from '../effect/Effect';
+import type World from '../world/World';
+import {safeId, MutateArray} from '../util';
+import getStats from '../stats';
 
-export class VectorSchema extends Schema {
-	@type('number') x: number;
-	@type('number') y: number;
-}
-
-export default abstract class Entity extends Schema {
-	@type('number') scale: number;
-	@type('number') angle: number;
-	@type([Effect]) effects: Effect[] = [];
-	@type(VectorSchema) pos: VectorSchema = new VectorSchema().assign({x: 0, y: 0});
-	@type(VectorSchema) offset: VectorSchema = new VectorSchema().assign({x: 0, y: 0});
-
+export default abstract class Entity {
 	id = String(safeId());
 	name: string = this.constructor.name;
 	markAsRemove = false;
 	elapsedTick = 0;
-	abstract body: Body;
-	abstract stats: unknown; // Need to be re-define in child class
+	effects = new MutateArray<Effect>(); // This is not relate to physic so need to use custom array to detect changes (MutateArray)
+	abstract rigid: Body; // This is relate to physic so no need to use custom mutate variable, changes auto assign at end of update
+	abstract stats: unknown; // Need to be re-define interface in child class
 
-	baseUpdate(world: World, tickData: TickData) {
+	beforeUpdate(world: World, tickData: ITickData) {
 		this.elapsedTick++;
 		this.stats = getStats(this.constructor.name);
 		// Iterate over effects and calculate them
 		// if effect is done or marked as remove, remove it
 		for (let i = 0; i < this.effects.length; i++) {
 			if (this.effects[i].markAsRemove) {
-				this.effects.splice(i, 1);
-				i--;
+				this.effects.removeIndex(i--);
 				continue;
 			}
 
@@ -42,20 +29,15 @@ export default abstract class Entity extends Schema {
 		}
 	}
 
-	finalUpdate(world: World, tickData: TickData) {
-		this.pos.x = this.body.pos.x;
-		this.pos.y = this.body.pos.y;
-		this.angle = this.body.angle;
-		this.scale = this.body.scale;
-		this.offset.x = this.body.offset.x;
-		this.offset.y = this.body.offset.y;
+	afterUpdate(world: World, tickData: ITickData) {
+
 	}
 
 	destroy() {
 		this.markAsRemove = true;
 	}
 
-	abstract update(world: World, tickData: TickData): void;
+	abstract update(world: World, tickData: ITickData): void;
 	abstract onInit(world: World): void; // Call after entity is added to world
 	abstract onDestroy(world: World): void; // Call after entity is removed from world
 	abstract onCollisionEnter(other: Entity, response: Response): void;

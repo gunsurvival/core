@@ -1,5 +1,5 @@
 import SAT from 'sat';
-import type {TickData} from '../types.js';
+import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
 import type Entity from '../entity/Entity.js';
 
@@ -33,11 +33,11 @@ export default class Player<T extends Entity> {
 		this.state.keyboard[1] = true;
 	}
 
-	update(world: World, tickData: TickData) {
+	update(world: World, tickData: ITickData) {
 		const vel = this.getSpeedV().scale(tickData.delta);
-		this.entity.body.setPosition(
-			this.entity.body.x + vel.x,
-			this.entity.body.y + vel.y,
+		this.entity.rigid.setPosition(
+			this.entity.rigid.x + vel.x,
+			this.entity.rigid.y + vel.y,
 		);
 	}
 

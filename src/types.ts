@@ -1,10 +1,10 @@
-export type MouseState = {
+export type IMouseState = {
 	left: boolean;
 	middle: boolean;
 	right: boolean;
 };
 
-export type TickData = {
+export type ITickData = {
 	accumulator: number;
 	elapsedMs: number;
 	deltaMs: number;

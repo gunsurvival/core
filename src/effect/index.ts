@@ -1,1 +1,2 @@
-export {default as Slow} from './Slow.js';
+export {default as Effect} from './Effect';
+export {default as Slow} from './Slow';
