@@ -1,2 +1,3 @@
-export * from './common.js';
-export * from './safeId.js';
+export * from './common';
+export * from './safeId';
+export * from './MutateArray';
