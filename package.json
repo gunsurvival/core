@@ -6,8 +6,8 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"start": "node dist/index.js",
-		"tsc-watch": "tsc --watch",
-		"watch": "nodemon --exec \"npm run build && npm start\" --watch src -e ts"
+		"watch": "tsc --watch",
+		"build": "tsc --build"
 	},
 	"keywords": [],
 	"author": "",
@@ -27,18 +27,18 @@
 		"sat": "^0.9.0"
 	},
 	"exports": {
-		".": "./src/index.ts",
-		"./effect/*": "./src/effect/*",
-		"./entity/*": "./src/entity/*",
-		"./player/*": "./src/player/*",
-		"./util/*": "./src/util/*",
+		".": "./dist/index.js",
+		"./effect/*": "./dist/effect/*",
+		"./entity/*": "./dist/entity/*",
+		"./player/*": "./dist/player/*",
+		"./util/*": "./dist/util/*",
 		"./world/*": "./dist/world/*",
-		"./effect": "./src/effect/index.ts",
-		"./entity": "./src/entity/index.ts",
-		"./player": "./src/player/index.ts",
-		"./util": "./src/util/index.ts",
+		"./effect": "./dist/effect/index.js",
+		"./entity": "./dist/entity/index.js",
+		"./player": "./dist/player/index.js",
+		"./util": "./dist/util/index.js",
 		"./world": "./dist/world/index.js",
-		"./stats": "./src/stats.ts",
-		"./types": "./src/types.ts"
+		"./stats": "./dist/stats.js",
+		"./types": "./dist/types.js"
 	}
 }
