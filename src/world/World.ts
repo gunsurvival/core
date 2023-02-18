@@ -1,7 +1,7 @@
 import {System, type Response} from 'detect-collisions';
-import type Entity from '../entity/Entity';
-import {type ITickData} from '../types';
-import {MutateArray} from '../util';
+import type Entity from '../entity/Entity.js';
+import {type ITickData} from '../types.js';
+import {MutateMap} from '../util/index.js';
 
 type BodyRefEntity = Body & {entityRef: Entity};
 type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
@@ -13,17 +13,15 @@ export default abstract class World {
 	// @filterChildren((client, key: string, entity: Entity, root: World) => {
 	// 	const currentPlayer = root.entities.get(client.userData.entityId as string);
 	// 	if (currentPlayer) {
-	// 		const a = entity.rigid.pos.x - currentPlayer.rigid.pos.x;
-	// 		const b = entity.rigid.pos.y - currentPlayer.rigid.pos.y;
+	// 		const a = entity.body.pos.x - currentPlayer.body.pos.x;
+	// 		const b = entity.body.pos.y - currentPlayer.body.pos.y;
 
 	// 		return (Math.sqrt((a * a) + (b * b))) <= 1366;
 	// 	}
 
 	// 	return false;
 	// })
-	entities = new MutateArray<Entity>();
-	// TODO: Them mutateMap nua
-	// TODO: Sua tat ca filke trong core
+	entities = new MutateMap<string, Entity>();
 	collisionHashMap = new Map<string, Response>();
 	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
@@ -35,16 +33,16 @@ export default abstract class World {
 
 		this.entities.forEach((entity: Entity, id) => {
 			if (entity.markAsRemove) {
-				this.physics.remove(entity.rigid);
-				this.entities.remove(entity);
+				this.physics.remove(entity.body);
+				this.entities.delete(id);
 				return;
 			}
 
 			entity.beforeUpdate(this, tickData);
 			entity.update(this, tickData); // User defined update
-			this.physics.updateBody(entity.rigid);
+			this.physics.updateBody(entity.body);
 
-			this.physics.checkOne(entity.rigid, ({...response}: ResponseBodyRefEntity) => {
+			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
 				const uniq = String(id) + response.b.entityRef.id;
 				this.newCollisionHashMap.set(uniq, response);
 				if (this.collisionHashMap.has(uniq)) {

@@ -10,11 +10,11 @@ export type StatsBush = {
 
 export default class Bush extends Entity {
 	stats = getStats<StatsBush>('Bush');
-	rigid: Body;
+	body: Body;
 
 	constructor(pos: SAT.Vector, bodyOptions: BodyOptions = {}) {
 		super();
-		this.rigid = new Circle(pos, this.stats.radius, bodyOptions);
+		this.body = new Circle(pos, this.stats.radius, bodyOptions);
 	}
 
 	update(world: World, tickData: ITickData) {}

@@ -16,10 +16,10 @@
 //           \  \ `-.   \_\_`. _.'_/_/  -' _.' /
 // ===========`-.`___`-.__\ \___  /__.-'_.'_.-'================
 
-export * as Effect from './effect';
-export * as Entity from './entity';
-export * as Player from './player';
-export * as World from './world';
-export * as Util from './util';
-export * from './stats';
-export * from './types';
+export * as Effect from './effect/index.js';
+export * as Entity from './entity/index.js';
+export * as Player from './player/index.js';
+export * as World from './world/index.js';
+export * as Util from './util/index.js';
+export * from './stats.js';
+export * from './types.js';

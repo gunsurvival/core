@@ -35,9 +35,9 @@ export default class Player<T extends Entity> {
 
 	update(world: World, tickData: ITickData) {
 		const vel = this.getSpeedV().scale(tickData.delta);
-		this.entity.rigid.setPosition(
-			this.entity.rigid.x + vel.x,
-			this.entity.rigid.y + vel.y,
+		this.entity.body.setPosition(
+			this.entity.body.x + vel.x,
+			this.entity.body.y + vel.y,
 		);
 	}
 

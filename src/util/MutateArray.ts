@@ -4,7 +4,7 @@ export class MutateArray<T> extends Array<T> {
 	onAdd: (item: T) => void = () => {};
 	onRemove: (item: T) => void = () => {};
 
-	add(...items: T[]) {
+	push(...items: T[]) {
 		super.push(...items);
 		items.forEach(this.onAdd);
 		return this.length;

@@ -10,11 +10,11 @@ export type StatsRock = {
 
 export default class Rock extends Entity {
 	stats = getStats<StatsRock>('Rock');
-	rigid: Body;
+	body: Body;
 
 	constructor(pos: SAT.Vector, bodyOptions: BodyOptions = {}) {
 		super();
-		this.rigid = new Circle(pos, this.stats.radius, bodyOptions);
+		this.body = new Circle(pos, this.stats.radius, bodyOptions);
 	}
 
 	update(world: World, tickData: ITickData): void {}
@@ -22,9 +22,9 @@ export default class Rock extends Entity {
 	onDestroy(): void {}
 	onCollisionEnter(other: Entity, response: Response) {}
 	onCollisionStay(other: Entity, response: Response) {
-		other.rigid.setPosition(
-			other.rigid.pos.x + response.overlapV.x + response.overlapN.x,
-			other.rigid.pos.y + response.overlapV.y + response.overlapN.y,
+		other.body.setPosition(
+			other.body.pos.x + response.overlapV.x + response.overlapN.x,
+			other.body.pos.y + response.overlapV.y + response.overlapN.y,
 		);
 	}
 

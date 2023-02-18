@@ -1,6 +1,6 @@
-import type {ITickData} from '../types';
-import {safeId} from '../util';
-import type World from '../world/World';
+import type {ITickData} from '../types.js';
+import {safeId} from '../util/safeId.js';
+import type World from '../world/World.js';
 
 export default abstract class Effect {
 	id: number = safeId();
