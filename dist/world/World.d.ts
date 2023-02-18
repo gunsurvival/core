@@ -1,14 +1,14 @@
-/// <reference types="sat" />
-import { Schema, MapSchema } from '@colyseus/schema';
+/// <reference types="sat" resolution-mode="require"/>
 import { System, type Response } from 'detect-collisions';
-import Entity from '../entity/Entity.js';
-import { type TickData } from '../types.js';
-export default class World extends Schema {
-    entities: MapSchema<Entity, string>;
+import type Entity from '../entity/Entity.js';
+import { type ITickData } from '../types.js';
+import { MutateMap } from '../util/index.js';
+export default abstract class World {
+    entities: MutateMap<string, Entity>;
     collisionHashMap: Map<string, Response>;
     newCollisionHashMap: Map<string, Response>;
     physics: System;
-    nextTick(tickData: TickData): void;
+    nextTick(tickData: ITickData): void;
     add(entity: Entity): void;
     remove(entity: Entity): void;
 }

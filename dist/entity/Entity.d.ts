@@ -1,30 +1,21 @@
-/// <reference types="sat" />
-import { Schema } from '@colyseus/schema';
-import { type Body } from 'detect-collisions';
-import type { Response } from 'detect-collisions';
-import Effect from '../effect/Effect.js';
-import type { TickData } from '../types.js';
+/// <reference types="sat" resolution-mode="require"/>
+import type { Body, Response } from 'detect-collisions';
+import type { ITickData } from '../types.js';
+import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
-export declare class VectorSchema extends Schema {
-    x: number;
-    y: number;
-}
-export default abstract class Entity extends Schema {
-    scale: number;
-    angle: number;
-    effects: Effect[];
-    pos: VectorSchema;
-    offset: VectorSchema;
+import { MutateArray } from '../util/index.js';
+export default abstract class Entity {
     id: string;
     name: string;
     markAsRemove: boolean;
     elapsedTick: number;
+    effects: MutateArray<Effect>;
     abstract body: Body;
     abstract stats: unknown;
-    baseUpdate(world: World, tickData: TickData): void;
-    finalUpdate(world: World, tickData: TickData): void;
+    beforeUpdate(world: World, tickData: ITickData): void;
+    afterUpdate(world: World, tickData: ITickData): void;
     destroy(): void;
-    abstract update(world: World, tickData: TickData): void;
+    abstract update(world: World, tickData: ITickData): void;
     abstract onInit(world: World): void;
     abstract onDestroy(world: World): void;
     abstract onCollisionEnter(other: Entity, response: Response): void;

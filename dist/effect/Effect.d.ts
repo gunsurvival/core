@@ -1,10 +1,9 @@
-import { Schema } from '@colyseus/schema';
-import { type TickData } from '../types';
-import type World from '../world/World';
-export default abstract class Effect extends Schema {
+import type { ITickData } from '../types.js';
+import type World from '../world/World.js';
+export default abstract class Effect {
     id: number;
     markAsRemove: boolean;
     destroy(): void;
-    abstract calc(stats: unknown, world: World, tickData: TickData): void;
+    abstract calc(stats: unknown, world: World, tickData: ITickData): void;
 }
 //# sourceMappingURL=Effect.d.ts.map

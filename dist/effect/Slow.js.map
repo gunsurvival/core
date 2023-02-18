@@ -1,1 +1,1 @@
-{"version":3,"file":"Slow.js","sourceRoot":"","sources":["../../src/effect/Slow.ts"],"names":[],"mappings":"AAEA,OAAO,MAAM,MAAM,aAAa,CAAC;AAEjC,MAAM,CAAC,OAAO,OAAO,IAAK,SAAQ,MAAM;IACvC,IAAI,CAAC,KAAc,EAAE,KAAY,EAAE,QAAkB;IAErD,CAAC;CACD"}
+{"version":3,"file":"Slow.js","sourceRoot":"","sources":["../../src/effect/Slow.ts"],"names":[],"mappings":"AAEA,OAAO,MAAM,MAAM,aAAa,CAAC;AAEjC,MAAM,CAAC,OAAO,OAAO,IAAK,SAAQ,MAAM;IACvC,IAAI,CAAC,KAAc,EAAE,KAAY,EAAE,QAAmB;IAEtD,CAAC;CACD"}

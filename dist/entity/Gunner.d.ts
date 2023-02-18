@@ -1,18 +1,17 @@
-/// <reference types="sat" />
-import { Schema } from '@colyseus/schema';
+/// <reference types="sat" resolution-mode="require"/>
 import { Circle, type Response } from 'detect-collisions';
-import type { TickData } from '../types.js';
+import type { ITickData } from '../types.js';
 import type World from '../world/World.js';
 import Entity from './Entity.js';
-export declare class StatsGunner extends Schema {
+export type StatsGunner = {
     health: number;
     speed: number;
     radius: number;
-}
+};
 export default class Gunner extends Entity {
     stats: StatsGunner;
     body: Circle;
-    update(world: World, tickData: TickData): void;
+    update(world: World, tickData: ITickData): void;
     onInit(): void;
     onDestroy(): void;
     onCollisionEnter(other: Entity, response: Response): void;

@@ -1,5 +1,5 @@
 import SAT from 'sat';
-import type { TickData } from '../types.js';
+import type { ITickData } from '../types.js';
 import type World from '../world/World.js';
 import type Entity from '../entity/Entity.js';
 export default class Player<T extends Entity> {
@@ -29,7 +29,7 @@ export default class Player<T extends Entity> {
         };
     };
     constructor(entity: T);
-    update(world: World, tickData: TickData): void;
+    update(world: World, tickData: ITickData): void;
     getSpeedV(): SAT.Vector;
 }
 //# sourceMappingURL=Casual.d.ts.map
