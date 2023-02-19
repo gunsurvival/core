@@ -4,6 +4,7 @@ import type World from '../world/World.js';
 import type Entity from '../entity/Entity.js';
 
 export default class Player<T extends Entity> {
+	entity: T;
 	fallbackSpeed = 5;
 	state = {
 		keyboard: {
@@ -29,8 +30,8 @@ export default class Player<T extends Entity> {
 		},
 	};
 
-	constructor(public entity: T) {
-		this.state.keyboard[1] = true;
+	playAs(entity: T) {
+		this.entity = entity;
 	}
 
 	update(world: World, tickData: ITickData) {
