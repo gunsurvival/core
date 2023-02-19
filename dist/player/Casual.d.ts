@@ -28,7 +28,7 @@ export default class Player<T extends Entity> {
             right: boolean;
         };
     };
-    constructor(entity: T);
+    playAs(entity: T): void;
     update(world: World, tickData: ITickData): void;
     getSpeedV(): SAT.Vector;
 }

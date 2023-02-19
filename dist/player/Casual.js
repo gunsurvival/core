@@ -25,9 +25,8 @@ export default class Player {
             right: false,
         },
     };
-    constructor(entity) {
+    playAs(entity) {
         this.entity = entity;
-        this.state.keyboard[1] = true;
     }
     update(world, tickData) {
         const vel = this.getSpeedV().scale(tickData.delta);
