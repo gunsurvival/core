@@ -15,11 +15,11 @@ export default abstract class Entity {
     beforeUpdate(world: World, tickData: ITickData): void;
     afterUpdate(world: World, tickData: ITickData): void;
     destroy(): void;
-    abstract update(world: World, tickData: ITickData): void;
-    abstract onInit(world: World): void;
-    abstract onDestroy(world: World): void;
-    abstract onCollisionEnter(other: Entity, response: Response): void;
-    abstract onCollisionStay(other: Entity, response: Response): void;
-    abstract onCollisionExit(other: Entity, response: Response): void;
+    update(world: World, tickData: ITickData): void;
+    onAdd(world: World): void;
+    onDestroy(world: World): void;
+    onCollisionEnter(other: Entity, response: Response): void;
+    onCollisionStay(other: Entity, response: Response): void;
+    onCollisionExit(other: Entity, response: Response): void;
 }
 //# sourceMappingURL=Entity.d.ts.map

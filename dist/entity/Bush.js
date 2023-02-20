@@ -8,11 +8,5 @@ export default class Bush extends Entity {
         super();
         this.body = new Circle(pos, this.stats.radius, bodyOptions);
     }
-    update(world, tickData) { }
-    onInit() { }
-    onDestroy() { }
-    onCollisionEnter(other, response) { }
-    onCollisionStay(other, response) { }
-    onCollisionExit(other, response) { }
 }
 //# sourceMappingURL=Bush.js.map

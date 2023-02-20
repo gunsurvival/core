@@ -22,5 +22,11 @@ export default class Entity {
     destroy() {
         this.markAsRemove = true;
     }
+    update(world, tickData) { }
+    onAdd(world) { }
+    onDestroy(world) { }
+    onCollisionEnter(other, response) { }
+    onCollisionStay(other, response) { }
+    onCollisionExit(other, response) { }
 }
 //# sourceMappingURL=Entity.js.map

@@ -39,7 +39,8 @@ export default class World {
     add(entity) {
         this.physics.insert(entity.body);
         this.entities.set(entity.id, entity);
-        entity.onInit(this);
+        entity.onAdd(this);
+        console.log('add ', entity.constructor.name);
         entity.body.entityRef = entity;
     }
     remove(entity) {
