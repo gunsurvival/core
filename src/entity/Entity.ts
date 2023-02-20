@@ -37,10 +37,10 @@ export default abstract class Entity {
 		this.markAsRemove = true;
 	}
 
-	abstract update(world: World, tickData: ITickData): void;
-	abstract onInit(world: World): void; // Call after entity is added to world
-	abstract onDestroy(world: World): void; // Call after entity is removed from world
-	abstract onCollisionEnter(other: Entity, response: Response): void;
-	abstract onCollisionStay(other: Entity, response: Response): void;
-	abstract onCollisionExit(other: Entity, response: Response): void;
+	update(world: World, tickData: ITickData) {}
+	onAdd(world: World) {} // Call after entity is added to world
+	onDestroy(world: World) {} // Call after entity is removed from world
+	onCollisionEnter(other: Entity, response: Response) {}
+	onCollisionStay(other: Entity, response: Response) {}
+	onCollisionExit(other: Entity, response: Response) {}
 }

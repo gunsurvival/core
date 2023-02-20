@@ -13,11 +13,4 @@ export type StatsGunner = {
 export default class Gunner extends Entity {
 	stats = getStats<StatsGunner>('Gunner');
 	body = new Circle({x: 1, y: 1}, 80, {});
-
-	update(world: World, tickData: ITickData): void {}
-	onInit() {}
-	onDestroy() {}
-	onCollisionEnter(other: Entity, response: Response) {}
-	onCollisionStay(other: Entity, response: Response) {}
-	onCollisionExit(other: Entity, response: Response) {}
 }

@@ -17,16 +17,10 @@ export default class Rock extends Entity {
 		this.body = new Circle(pos, this.stats.radius, bodyOptions);
 	}
 
-	update(world: World, tickData: ITickData): void {}
-	onInit(): void {}
-	onDestroy(): void {}
-	onCollisionEnter(other: Entity, response: Response) {}
 	onCollisionStay(other: Entity, response: Response) {
 		other.body.setPosition(
 			other.body.pos.x + response.overlapV.x + response.overlapN.x,
 			other.body.pos.y + response.overlapV.y + response.overlapN.y,
 		);
 	}
-
-	onCollisionExit(other: Entity, response: Response) {}
 }

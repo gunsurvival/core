@@ -7,5 +7,4 @@ export type StatsAIGunner = Record<string, unknown> & StatsGunner;
 
 export default class AIGunner extends Gunner {
 	stats = getStats<StatsAIGunner>('AIGunner');
-	update(world: World, tickData: ITickData): void {}
 }

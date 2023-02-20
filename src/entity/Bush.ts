@@ -16,12 +16,4 @@ export default class Bush extends Entity {
 		super();
 		this.body = new Circle(pos, this.stats.radius, bodyOptions);
 	}
-
-	update(world: World, tickData: ITickData) {}
-
-	onInit() {}
-	onDestroy() {}
-	onCollisionEnter(other: Entity, response: Response) {}
-	onCollisionStay(other: Entity, response: Response) {}
-	onCollisionExit(other: Entity, response: Response) {}
 }

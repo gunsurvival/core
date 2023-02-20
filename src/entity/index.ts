@@ -1,4 +1,4 @@
-export {default as Entity} from './Entity.js';
+export {default} from './Entity.js';
 export {default as AIGunner} from './AIGunner.js';
 export {default as Bush} from './Bush.js';
 export {default as Gunner} from './Gunner.js';
