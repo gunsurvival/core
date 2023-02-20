@@ -26,8 +26,6 @@ export default abstract class World {
 	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
 
-	// 	Constructor() {}
-
 	nextTick(tickData: ITickData) {
 		this.newCollisionHashMap.clear();
 
@@ -66,7 +64,8 @@ export default abstract class World {
 	add(entity: Entity) {
 		this.physics.insert(entity.body);
 		this.entities.set(entity.id, entity);
-		entity.onInit(this);
+		entity.onAdd(this);
+		console.log('add ', entity.constructor.name);
 		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
 		// Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
 	}
