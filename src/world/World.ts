@@ -65,7 +65,6 @@ export default abstract class World {
 		this.physics.insert(entity.body);
 		this.entities.set(entity.id, entity);
 		entity.onAdd(this);
-		console.log('add ', entity.constructor.name);
 		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
 		// Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
 	}
