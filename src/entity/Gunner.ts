@@ -1,7 +1,5 @@
-import {Circle, type Response} from 'detect-collisions';
+import {Circle} from 'detect-collisions';
 import getStats from '../stats.js';
-import type {ITickData} from '../types.js';
-import type World from '../world/World.js';
 import Entity from './Entity.js';
 
 export type StatsGunner = {

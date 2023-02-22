@@ -1,6 +1,4 @@
 import {type BodyOptions, type Response, type Body, Circle} from 'detect-collisions';
-import type {ITickData} from '../types.js';
-import type World from '../world/World.js';
 import Entity from './Entity.js';
 import getStats from '../stats.js';
 
