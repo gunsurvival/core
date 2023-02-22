@@ -1,3 +1,4 @@
+import {EventEmitter} from 'eventemitter3';
 import type {Body, Response} from 'detect-collisions';
 import type {ITickData} from '../types.js';
 import type Effect from '../effect/Effect.js';
@@ -11,8 +12,19 @@ export default abstract class Entity {
 	markAsRemove = false;
 	elapsedTick = 0;
 	effects = new MutateArray<Effect>(); // This is not relate to physic so need to use custom array to detect changes (MutateArray)
+	event = new EventEmitter();
 	abstract body: Body; // This is relate to physic so no need to use custom mutate variable, changes auto assign at end of update
 	abstract stats: unknown; // Need to be re-define interface in child class
+
+	constructor() {
+		this.effects.onAdd = (effect: Effect) => {
+			this.event.emit('+effects', effect);
+		};
+
+		this.effects.onRemove = (effect: Effect) => {
+			this.event.emit('-effects', effect);
+		};
+	}
 
 	beforeUpdate(world: World, tickData: ITickData) {
 		this.elapsedTick++;
@@ -39,7 +51,7 @@ export default abstract class Entity {
 
 	update(world: World, tickData: ITickData) {}
 	onAdd(world: World) {} // Call after entity is added to world
-	onDestroy(world: World) {} // Call after entity is removed from world
+	onRemove(world: World) {} // Call after entity is removed from world
 	onCollisionEnter(other: Entity, response: Response) {}
 	onCollisionStay(other: Entity, response: Response) {}
 	onCollisionExit(other: Entity, response: Response) {}

@@ -1,4 +1,5 @@
-import {System, type Response} from 'detect-collisions';
+import {EventEmitter} from 'eventemitter3';
+import {System, type Body, type Response} from 'detect-collisions';
 import type Entity from '../entity/Entity.js';
 import {type ITickData} from '../types.js';
 import {MutateMap} from '../util/index.js';
@@ -10,21 +11,27 @@ type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
 };
 
 export default abstract class World {
-	// @filterChildren((client, key: string, entity: Entity, root: World) => {
-	// 	const currentPlayer = root.entities.get(client.userData.entityId as string);
-	// 	if (currentPlayer) {
-	// 		const a = entity.body.pos.x - currentPlayer.body.pos.x;
-	// 		const b = entity.body.pos.y - currentPlayer.body.pos.y;
-
-	// 		return (Math.sqrt((a * a) + (b * b))) <= 1366;
-	// 	}
-
-	// 	return false;
-	// })
 	entities = new MutateMap<string, Entity>();
 	collisionHashMap = new Map<string, Response>();
 	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
+	event = new EventEmitter();
+
+	constructor() {
+		this.setupEvents();
+	}
+
+	setupEvents() {
+		this.entities.onAdd = (entity: Entity) => {
+			this.event.emit('+entities', entity);
+			entity.onAdd(this);
+		};
+
+		this.entities.onRemove = (entity: Entity) => {
+			this.event.emit('-entities', entity);
+			entity.onRemove(this);
+		};
+	}
 
 	nextTick(tickData: ITickData) {
 		this.newCollisionHashMap.clear();
@@ -72,6 +79,6 @@ export default abstract class World {
 	remove(entity: Entity) {
 		this.physics.remove(entity.body);
 		this.entities.delete(entity.id);
-		entity.onDestroy(this);
+		entity.onRemove(this);
 	}
 }
