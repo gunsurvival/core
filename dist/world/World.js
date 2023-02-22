@@ -1,3 +1,4 @@
+import { EventEmitter } from 'eventemitter3';
 import { System } from 'detect-collisions';
 import { MutateMap } from '../util/index.js';
 export default class World {
@@ -5,6 +6,20 @@ export default class World {
     collisionHashMap = new Map();
     newCollisionHashMap = new Map();
     physics = new System();
+    event = new EventEmitter();
+    constructor() {
+        this.setupEvents();
+    }
+    setupEvents() {
+        this.entities.onAdd = (entity) => {
+            this.event.emit('+entities', entity);
+            entity.onAdd(this);
+        };
+        this.entities.onRemove = (entity) => {
+            this.event.emit('-entities', entity);
+            entity.onRemove(this);
+        };
+    }
     nextTick(tickData) {
         this.newCollisionHashMap.clear();
         this.entities.forEach((entity, id) => {
@@ -14,7 +29,7 @@ export default class World {
                 return;
             }
             entity.beforeUpdate(this, tickData);
-            entity.update(this, tickData);
+            entity.update(this, tickData); // User defined update
             this.physics.updateBody(entity.body);
             this.physics.checkOne(entity.body, ({ ...response }) => {
                 const uniq = String(id) + response.b.entityRef.id;
@@ -41,11 +56,12 @@ export default class World {
         this.entities.set(entity.id, entity);
         entity.onAdd(this);
         entity.body.entityRef = entity;
+        // Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
     }
     remove(entity) {
         this.physics.remove(entity.body);
         this.entities.delete(entity.id);
-        entity.onDestroy(this);
+        entity.onRemove(this);
     }
 }
 //# sourceMappingURL=World.js.map

@@ -6,6 +6,7 @@ export function lerpAngle(start, end, amt) {
     const alpha = start;
     const beta = end;
     const rotates = [
+        // Tất cả trường hợp quay
         {
             result: Math.abs(alpha - beta),
             beta,
@@ -20,6 +21,6 @@ export function lerpAngle(start, end, amt) {
         },
     ];
     rotates.sort((a, b) => a.result - b.result);
-    return lerp(start, rotates[0].beta, amt);
+    return lerp(start, rotates[0].beta, amt); // Lấy giá trị nhỏ nhất của góc quay
 }
 //# sourceMappingURL=common.js.map

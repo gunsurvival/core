@@ -1,3 +1,5 @@
+// Create a custom Array class to handle add/remove events
+// do not use Array push/splice directly, use add/remove instead
 export class MutateArray extends Array {
     onAdd = () => { };
     onRemove = () => { };

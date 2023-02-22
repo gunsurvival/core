@@ -1,1 +1,1 @@
-{"version":3,"file":"Casual.d.ts","sourceRoot":"","sources":["../../src/player/Casual.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,MAAM,MAAM,qBAAqB,CAAC;AAC9C,OAAO,MAAM,MAAM,aAAa,CAAC;AAEjC,MAAM,CAAC,OAAO,OAAO,MAAM,CAAC,CAAC,SAAS,MAAM,CAAE,SAAQ,MAAM,CAAC,CAAC,CAAC;CAAG"}
+{"version":3,"file":"Casual.d.ts","sourceRoot":"","sources":["../../src/player/Casual.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,MAAM,qBAAqB,CAAC;AAC9C,OAAO,MAAM,MAAM,aAAa,CAAC;AAEjC,MAAM,CAAC,OAAO,OAAO,MAAM,CAAC,CAAC,SAAS,MAAM,CAAE,SAAQ,MAAM,CAAC,CAAC,CAAC;CAAG"}
