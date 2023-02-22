@@ -1,3 +1,5 @@
+import structuredClone from '@ungap/structured-clone';
+
 const stats: Record<string, Record<string, string | number | boolean>> = {
 	AIGunner: {
 		health: 100,
@@ -16,10 +18,7 @@ const stats: Record<string, Record<string, string | number | boolean>> = {
 	},
 };
 
-// Function setStats(name: string, value: Record<string, PrimitiveType>) {
-// 	Object.assign(stats[name], value);
-// }
-
 export default function getStats<T>(name: string): T {
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 	return structuredClone(stats[name]) as T;
 }
