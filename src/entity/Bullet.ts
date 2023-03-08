@@ -1,3 +1,4 @@
+import type SAT from 'sat';
 import {type Vector, type Body, Circle} from 'detect-collisions';
 import getStats from '../stats.js';
 import {type ITickData} from '../types.js';
@@ -48,5 +49,11 @@ export default class Bullet extends Entity {
 			this.vel.x = -response.overlapN.x * speed / 1.5;
 			this.vel.y = -response.overlapN.y * speed / 1.5;
 		}
+	}
+
+	init(data: {vel: Vector}) {
+		super.init(data);
+		this.vel.x = data.vel.x;
+		this.vel.y = data.vel.y;
 	}
 }

@@ -71,7 +71,6 @@ export default abstract class World {
 	add(entity: Entity) {
 		this.physics.insert(entity.body);
 		this.entities.set(entity.id, entity);
-		entity.onAdd(this);
 		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
 		// Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
 	}
@@ -79,6 +78,5 @@ export default abstract class World {
 	remove(entity: Entity) {
 		this.physics.remove(entity.body);
 		this.entities.delete(entity.id);
-		entity.onRemove(this);
 	}
 }

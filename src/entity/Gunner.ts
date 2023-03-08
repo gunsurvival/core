@@ -1,4 +1,4 @@
-import {type Response, Circle} from 'detect-collisions';
+import {type Response, Circle, type Vector} from 'detect-collisions';
 import Bullet from './Bullet.js';
 import getStats from '../stats.js';
 import Entity from './Entity.js';

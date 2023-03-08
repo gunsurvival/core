@@ -1,3 +1,4 @@
+import SAT from 'sat';
 import {EventEmitter} from 'eventemitter3';
 import type {Body, Response} from 'detect-collisions';
 import type {ITickData} from '../types.js';
@@ -55,4 +56,19 @@ export default abstract class Entity {
 	onCollisionEnter(other: Entity, response: Response) {}
 	onCollisionStay(other: Entity, response: Response) {}
 	onCollisionExit(other: Entity, response: Response) {}
+
+	init(data: Record<string, unknown>) {
+		const data_formated = data as {
+			id: string;
+			scale: number;
+			angle: number;
+			pos: {x: number; y: number};
+			offset: {x: number; y: number};
+		};
+		this.id = data_formated.id;
+		this.body.setAngle(data_formated.angle);
+		this.body.setScale(data_formated.scale);
+		this.body.setPosition(data_formated.pos.x, data_formated.pos.y);
+		this.body.setOffset(new SAT.Vector(data_formated.offset.x, data_formated.offset.y));
+	}
 }
