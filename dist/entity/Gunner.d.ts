@@ -1,4 +1,5 @@
-import { Circle } from 'detect-collisions';
+/// <reference types="sat" resolution-mode="require"/>
+import { type Response, Circle } from 'detect-collisions';
 import Entity from './Entity.js';
 export type StatsGunner = {
     health: number;
@@ -8,5 +9,6 @@ export type StatsGunner = {
 export default class Gunner extends Entity {
     stats: StatsGunner;
     body: Circle;
+    onCollisionStay(other: Entity, response: Response): void;
 }
 //# sourceMappingURL=Gunner.d.ts.map

@@ -24,5 +24,6 @@ export default abstract class Entity {
     onCollisionEnter(other: Entity, response: Response): void;
     onCollisionStay(other: Entity, response: Response): void;
     onCollisionExit(other: Entity, response: Response): void;
+    init(data: Record<string, unknown>): void;
 }
 //# sourceMappingURL=Entity.d.ts.map

@@ -1,3 +1,4 @@
+import SAT from 'sat';
 import { EventEmitter } from 'eventemitter3';
 import { safeId, MutateArray } from '../util/index.js';
 import getStats from '../stats.js';
@@ -40,5 +41,13 @@ export default class Entity {
     onCollisionEnter(other, response) { }
     onCollisionStay(other, response) { }
     onCollisionExit(other, response) { }
+    init(data) {
+        const data_formated = data;
+        this.id = data_formated.id;
+        this.body.setAngle(data_formated.angle);
+        this.body.setScale(data_formated.scale);
+        this.body.setPosition(data_formated.pos.x, data_formated.pos.y);
+        this.body.setOffset(new SAT.Vector(data_formated.offset.x, data_formated.offset.y));
+    }
 }
 //# sourceMappingURL=Entity.js.map

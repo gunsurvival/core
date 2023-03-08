@@ -54,14 +54,12 @@ export default class World {
     add(entity) {
         this.physics.insert(entity.body);
         this.entities.set(entity.id, entity);
-        entity.onAdd(this);
         entity.body.entityRef = entity;
         // Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
     }
     remove(entity) {
         this.physics.remove(entity.body);
         this.entities.delete(entity.id);
-        entity.onRemove(this);
     }
 }
 //# sourceMappingURL=World.js.map

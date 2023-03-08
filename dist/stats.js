@@ -9,15 +9,20 @@ const stats = {
     },
     Gunner: {
         health: 100,
-        speed: 5,
+        speed: 4,
         radius: 50,
     },
     Rock: {
-        radius: 55,
+        radius: 90,
+    },
+    Bullet: {
+        radius: 10,
     },
 };
 export default function getStats(name) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    if (!stats[name]) {
+        throw new Error(`Stats for ${name} not found`);
+    }
     return structuredClone(stats[name]);
 }
 //# sourceMappingURL=stats.js.map

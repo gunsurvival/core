@@ -1,5 +1,5 @@
-import SAT from 'sat';
 import type { ITickData } from '../types.js';
+import CoolDownSystem from '../util/CoolDownSystem.js';
 import type World from '../world/World.js';
 import type Entity from '../entity/Entity.js';
 export default abstract class Player<T extends Entity> {
@@ -28,8 +28,8 @@ export default abstract class Player<T extends Entity> {
             right: boolean;
         };
     };
+    coolDownSystem: CoolDownSystem;
     playAs(entity: T): void;
     update(world: World, tickData: ITickData): void;
-    getSpeedV(): SAT.Vector;
 }
 //# sourceMappingURL=Player.d.ts.map
