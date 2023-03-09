@@ -42,12 +42,12 @@ export default class Entity {
     onCollisionStay(other, response) { }
     onCollisionExit(other, response) { }
     init(data) {
-        const data_formated = data;
-        this.id = data_formated.id;
-        this.body.setAngle(data_formated.angle);
-        this.body.setScale(data_formated.scale);
-        this.body.setPosition(data_formated.pos.x, data_formated.pos.y);
-        this.body.setOffset(new SAT.Vector(data_formated.offset.x, data_formated.offset.y));
+        const dataFormatted = data;
+        this.id = dataFormatted.id;
+        this.body.setAngle(dataFormatted.angle);
+        this.body.setScale(dataFormatted.scale);
+        this.body.setPosition(dataFormatted.pos.x, dataFormatted.pos.y);
+        this.body.setOffset(new SAT.Vector(dataFormatted.offset.x, dataFormatted.offset.y));
     }
 }
 //# sourceMappingURL=Entity.js.map
