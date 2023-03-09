@@ -58,17 +58,17 @@ export default abstract class Entity {
 	onCollisionExit(other: Entity, response: Response) {}
 
 	init(data: Record<string, unknown>) {
-		const data_formated = data as {
+		const dataFormatted = data as {
 			id: string;
 			scale: number;
 			angle: number;
 			pos: {x: number; y: number};
 			offset: {x: number; y: number};
 		};
-		this.id = data_formated.id;
-		this.body.setAngle(data_formated.angle);
-		this.body.setScale(data_formated.scale);
-		this.body.setPosition(data_formated.pos.x, data_formated.pos.y);
-		this.body.setOffset(new SAT.Vector(data_formated.offset.x, data_formated.offset.y));
+		this.id = dataFormatted.id;
+		this.body.setAngle(dataFormatted.angle);
+		this.body.setScale(dataFormatted.scale);
+		this.body.setPosition(dataFormatted.pos.x, dataFormatted.pos.y);
+		this.body.setOffset(new SAT.Vector(dataFormatted.offset.x, dataFormatted.offset.y));
 	}
 }
