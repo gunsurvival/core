@@ -1,5 +1,4 @@
-import type SAT from 'sat';
-import {type Vector, type Body, Circle} from 'detect-collisions';
+import {type Body, SATVector, Circle} from 'detect-collisions';
 import getStats from '../stats.js';
 import {type ITickData} from '../types.js';
 import type World from '../world/World.js';
@@ -12,9 +11,9 @@ export type StatsBullet = {
 export default class Bullet extends Entity {
 	body: Body;
 	stats = getStats<StatsBullet>('Bullet');
-	vel: Vector;
+	vel: SATVector;
 
-	constructor(pos: Vector, vel: Vector = {x: 0, y: 0}) {
+	constructor(pos: SATVector, vel: SATVector = new SATVector(0, 0)) {
 		super();
 		this.body = new Circle(pos, this.stats.radius);
 		this.vel = vel;
@@ -51,7 +50,7 @@ export default class Bullet extends Entity {
 		}
 	}
 
-	init(data: {vel: Vector}) {
+	init(data: {vel: SATVector}) {
 		super.init(data);
 		this.vel.x = data.vel.x;
 		this.vel.y = data.vel.y;

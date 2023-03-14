@@ -1,9 +1,9 @@
-import SAT from 'sat';
 import type Entity from '../entity/Entity.js';
 import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
 import Bullet from '../entity/Bullet.js';
 import Player from './Player.js';
+import {SATVector} from 'detect-collisions';
 
 export default class Casual<T extends Entity> extends Player<T> {
 	update(world: World, tickData: ITickData) {
@@ -20,7 +20,7 @@ export default class Casual<T extends Entity> extends Player<T> {
 
 	getSpeedV() {
 		const speed = (this.entity.stats as {speed: number}).speed || this.fallbackSpeed;
-		return new SAT.Vector(
+		return new SATVector(
 			this.state.keyboard.a ? -1 : this.state.keyboard.d ? 1 : 0,
 			this.state.keyboard.w ? -1 : this.state.keyboard.s ? 1 : 0,
 		).scale(

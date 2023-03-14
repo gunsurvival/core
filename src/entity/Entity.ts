@@ -1,6 +1,5 @@
-import SAT from 'sat';
 import {EventEmitter} from 'eventemitter3';
-import type {Body, Response} from 'detect-collisions';
+import {type Body, type Response, SATVector} from 'detect-collisions';
 import type {ITickData} from '../types.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
@@ -12,9 +11,9 @@ export default abstract class Entity {
 	name: string = this.constructor.name;
 	markAsRemove = false;
 	elapsedTick = 0;
-	effects = new MutateArray<Effect>(); // This is not relate to physic so need to use custom array to detect changes (MutateArray)
+	effects = new MutateArray<Effect>(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
 	event = new EventEmitter();
-	abstract body: Body; // This is relate to physic so no need to use custom mutate variable, changes auto assign at end of update
+	abstract body: Body; // Server state: This is relate to physic so no need to use custom mutate variable, changes auto assign it at end of update
 	abstract stats: unknown; // Need to be re-define interface in child class
 
 	constructor() {
@@ -69,6 +68,6 @@ export default abstract class Entity {
 		this.body.setAngle(dataFormatted.angle);
 		this.body.setScale(dataFormatted.scale);
 		this.body.setPosition(dataFormatted.pos.x, dataFormatted.pos.y);
-		this.body.setOffset(new SAT.Vector(dataFormatted.offset.x, dataFormatted.offset.y));
+		this.body.setOffset(new SATVector(dataFormatted.offset.x, dataFormatted.offset.y));
 	}
 }

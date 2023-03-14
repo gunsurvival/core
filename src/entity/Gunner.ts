@@ -1,5 +1,5 @@
-import {type Response, Circle, type Vector} from 'detect-collisions';
-import Bullet from './Bullet.js';
+import {type Response, Circle} from 'detect-collisions';
+import type Bullet from './Bullet.js';
 import getStats from '../stats.js';
 import Entity from './Entity.js';
 import type World from '../world/World.js';
@@ -21,6 +21,10 @@ export default class Gunner extends Entity {
 					this.body.pos.x - (response.overlapV.x + response.overlapN.x) / 2,
 					this.body.pos.y - (response.overlapV.y + response.overlapN.y) / 2,
 				);
+				break;
+
+			case 'Bullet':
+				this.stats.health -= (other as Bullet).vel.len() * 0.5;
 				break;
 			default:
 				break;

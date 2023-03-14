@@ -1,4 +1,4 @@
-import {type BodyOptions, type Response, type Body, Circle} from 'detect-collisions';
+import {type BodyOptions, type Response, type Body, Circle, type SATVector} from 'detect-collisions';
 import Entity from './Entity.js';
 import getStats from '../stats.js';
 
@@ -10,7 +10,7 @@ export default class Rock extends Entity {
 	stats = getStats<StatsRock>('Rock');
 	body: Body;
 
-	constructor(pos: SAT.Vector, bodyOptions: BodyOptions = {}) {
+	constructor(pos: SATVector, bodyOptions: BodyOptions = {}) {
 		super();
 		this.body = new Circle(pos, this.stats.radius, bodyOptions);
 	}

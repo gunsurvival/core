@@ -1,4 +1,4 @@
-import {type BodyOptions, type Body, Circle} from 'detect-collisions';
+import {type BodyOptions, type Body, Circle, type SATVector} from 'detect-collisions';
 import getStats from '../stats.js';
 import Entity from './Entity.js';
 
@@ -10,7 +10,7 @@ export default class Bush extends Entity {
 	stats = getStats<StatsBush>('Bush');
 	body: Body;
 
-	constructor(pos: SAT.Vector, bodyOptions: BodyOptions = {}) {
+	constructor(pos: SATVector, bodyOptions: BodyOptions = {}) {
 		super();
 		this.body = new Circle(pos, this.stats.radius, bodyOptions);
 	}

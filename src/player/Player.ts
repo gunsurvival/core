@@ -1,4 +1,3 @@
-import SAT from 'sat';
 import type {ITickData} from '../types.js';
 import CoolDownSystem from '../util/CoolDownSystem.js';
 import type World from '../world/World.js';
