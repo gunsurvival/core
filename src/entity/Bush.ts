@@ -1,5 +1,5 @@
 import {type BodyOptions, type Body, Circle, type SATVector} from 'detect-collisions';
-import getStats from '../stats.js';
+import {getStats} from '../stats.js';
 import Entity from './Entity.js';
 
 export type StatsBush = {

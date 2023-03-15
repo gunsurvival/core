@@ -1,6 +1,6 @@
 import {type BodyOptions, type Response, type Body, Circle, type SATVector} from 'detect-collisions';
 import Entity from './Entity.js';
-import getStats from '../stats.js';
+import {getStats} from '../stats.js';
 
 export type StatsRock = {
 	radius: number;

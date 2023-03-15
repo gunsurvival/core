@@ -1,6 +1,6 @@
 import {type Response, Circle} from 'detect-collisions';
 import type Bullet from './Bullet.js';
-import getStats from '../stats.js';
+import {getStats} from '../stats.js';
 import Entity from './Entity.js';
 import type World from '../world/World.js';
 

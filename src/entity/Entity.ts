@@ -4,7 +4,7 @@ import type {ITickData} from '../types.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
 import {safeId, MutateArray} from '../util/index.js';
-import getStats from '../stats.js';
+import {getStats} from '../stats.js';
 
 export default abstract class Entity {
 	id = String(safeId());

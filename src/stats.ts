@@ -1,6 +1,6 @@
 import structuredClone from '@ungap/structured-clone';
 
-const stats: Record<string, Record<string, string | number | boolean>> = {
+export const stats: Record<string, Record<string, string | number | boolean>> = {
 	AIGunner: {
 		health: 100,
 		speed: 5,
@@ -21,7 +21,7 @@ const stats: Record<string, Record<string, string | number | boolean>> = {
 	},
 };
 
-export default function getStats<T>(name: string): T {
+export function getStats<T>(name: string): T {
 	if (!stats[name]) {
 		throw new Error(`Stats for ${name} not found`);
 	}
