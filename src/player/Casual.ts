@@ -36,14 +36,14 @@ export default class Casual<T extends Entity> extends Player<T> {
 		this.coolDownSystem.add('shoot', 100);
 
 		// TODO: Xai Vector cua Sat2d co may ham co san thay vi math amogus
-		const vel = {
-			x: Math.cos(this.entity.body.angle) * 30,
-			y: Math.sin(this.entity.body.angle) * 30,
-		};
-		const bullet = new Bullet({
-			x: this.entity.body.pos.x + vel.x * 2,
-			y: this.entity.body.pos.y + vel.y * 2,
-		}, vel);
+		const vel = new SATVector(
+			Math.cos(this.entity.body.angle) * 30,
+			Math.sin(this.entity.body.angle) * 30,
+		);
+		const bullet = new Bullet(new SATVector(
+			this.entity.body.pos.x + vel.x * 2,
+			this.entity.body.pos.y + vel.y * 2,
+		), vel);
 		world.add(bullet);
 	}
 }
