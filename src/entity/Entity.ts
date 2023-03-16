@@ -13,6 +13,8 @@ export default abstract class Entity {
 	elapsedTick = 0;
 	effects = new MutateArray<Effect>(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
 	event = new EventEmitter();
+	vel = new SATVector(0, 0);
+
 	abstract body: Body; // Server state: This is relate to physic so no need to use custom mutate variable, changes auto assign it at end of update
 	abstract stats: unknown; // Need to be re-define interface in child class
 
@@ -39,6 +41,8 @@ export default abstract class Entity {
 
 			this.effects[i].calc(this.stats, world, tickData);
 		}
+
+		this.body.pos.add(this.vel.scale(tickData.delta));
 	}
 
 	afterUpdate(world: World, tickData: ITickData) {
@@ -69,5 +73,9 @@ export default abstract class Entity {
 		this.body.setScale(dataFormatted.scale);
 		this.body.setPosition(dataFormatted.pos.x, dataFormatted.pos.y);
 		this.body.setOffset(new SATVector(dataFormatted.offset.x, dataFormatted.offset.y));
+	}
+
+	assign(initData: Record<string, unknown>) {
+		Object.assign(this, initData);
 	}
 }

@@ -16,7 +16,7 @@ export default class Gunner extends Entity {
 	onCollisionEnter(other: Entity, response: Response) {
 		switch (other.constructor.name) {
 			case 'Bullet':
-				this.stats.health -= (other as Bullet).vel.len();
+				this.stats.health -= (other as Bullet).speed;
 				break;
 			default:
 				break;

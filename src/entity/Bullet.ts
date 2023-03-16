@@ -6,48 +6,56 @@ import Entity from './Entity.js';
 
 export type StatsBullet = {
 	radius: number;
+	speed: number;
 };
 
 export default class Bullet extends Entity {
 	body: Body;
 	stats = getStats<StatsBullet>('Bullet');
-	vel: SATVector;
+	angle = 0;
+	speed = 0;
 
-	constructor(pos: SATVector, vel: SATVector = new SATVector(0, 0)) {
+	constructor(pos: SATVector, angle: number, speed: number) {
 		super();
 		this.body = new Circle(pos, this.stats.radius);
-		this.vel = vel;
+		this.angle = angle;
+		this.speed = speed;
 	}
 
 	update(world: World, tickData: ITickData): void {
-		this.body.pos.x += this.vel.x * tickData.delta;
-		this.body.pos.y += this.vel.y * tickData.delta;
-		this.vel.x *= 0.97;
-		this.vel.y *= 0.97;
-		if (this.vel.x ** 2 + this.vel.y ** 2 < 0.001) {
+		const vel = new SATVector(
+			Math.cos(this.angle) * this.speed,
+			Math.sin(this.angle) * this.speed,
+		);
+		this.body.pos.add(vel.scale(tickData.delta));
+		this.speed *= 0.98;
+		if (this.speed < 0.001) {
 			world.remove(this);
 		}
 	}
 
-	onCollisionEnter(other: Entity, response: SAT.Response): void {
+	async onCollisionEnter(other: Entity, response: SAT.Response): void {
 		// TODO: XAi SAT.VECTOR
-		const speed = Math.sqrt(this.vel.x ** 2 + this.vel.y ** 2);
 		if (other.constructor.name === 'Gunner') {
-			this.vel.x = -response.overlapN.x * speed / 1.5;
-			this.vel.y = -response.overlapN.y * speed / 1.5;
+			await this.waitResolve(); // Insert some middleware here to wait for the other platform to resolve
+			// TODO: emit collision event
+			// server co event thi gui event ve client
+			// client co event thi await event tu server ve
+			this.angle = Math.atan2(-response.overlapN.y, -response.overlapN.x);
+			this.speed = response.overlapV.len() / 1.5;
 		}
 
 		if (other.constructor.name === 'Rock') {
 			this.body.pos.x -= response.overlapV.x;
 			this.body.pos.y -= response.overlapV.y;
-			this.vel.x = -response.overlapN.x * speed / 1.5;
-			this.vel.y = -response.overlapN.y * speed / 1.5;
+			this.angle = Math.atan2(-response.overlapN.y, -response.overlapN.x);
+			this.speed = response.overlapV.len() / 1.5;
 		}
 	}
 
-	init(data: {vel: SATVector}) {
+	init(data: {angle: number; speed: number}) {
 		super.init(data);
-		this.vel.x = data.vel.x;
-		this.vel.y = data.vel.y;
+		this.angle = data.angle;
+		this.speed = data.speed;
 	}
 }
