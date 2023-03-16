@@ -1,5 +1,5 @@
-import type SAT from 'sat';
-import { type Vector, type Body } from 'detect-collisions';
+/// <reference types="sat" resolution-mode="require"/>
+import { type Body, SATVector } from 'detect-collisions';
 import { type ITickData } from '../types.js';
 import type World from '../world/World.js';
 import Entity from './Entity.js';
@@ -9,12 +9,12 @@ export type StatsBullet = {
 export default class Bullet extends Entity {
     body: Body;
     stats: StatsBullet;
-    vel: Vector;
-    constructor(pos: Vector, vel?: Vector);
+    vel: SATVector;
+    constructor(pos: SATVector, vel?: SATVector);
     update(world: World, tickData: ITickData): void;
     onCollisionEnter(other: Entity, response: SAT.Response): void;
     init(data: {
-        vel: Vector;
+        vel: SATVector;
     }): void;
 }
 //# sourceMappingURL=Bullet.d.ts.map

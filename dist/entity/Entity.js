@@ -1,13 +1,13 @@
-import SAT from 'sat';
 import { EventEmitter } from 'eventemitter3';
+import { SATVector } from 'detect-collisions';
 import { safeId, MutateArray } from '../util/index.js';
-import getStats from '../stats.js';
+import { getStats } from '../stats.js';
 export default class Entity {
     id = String(safeId());
     name = this.constructor.name;
     markAsRemove = false;
     elapsedTick = 0;
-    effects = new MutateArray(); // This is not relate to physic so need to use custom array to detect changes (MutateArray)
+    effects = new MutateArray(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
     event = new EventEmitter();
     constructor() {
         this.effects.onAdd = (effect) => {
@@ -47,7 +47,7 @@ export default class Entity {
         this.body.setAngle(dataFormatted.angle);
         this.body.setScale(dataFormatted.scale);
         this.body.setPosition(dataFormatted.pos.x, dataFormatted.pos.y);
-        this.body.setOffset(new SAT.Vector(dataFormatted.offset.x, dataFormatted.offset.y));
+        this.body.setOffset(new SATVector(dataFormatted.offset.x, dataFormatted.offset.y));
     }
 }
 //# sourceMappingURL=Entity.js.map

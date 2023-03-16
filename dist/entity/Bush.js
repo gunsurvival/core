@@ -1,5 +1,5 @@
 import { Circle } from 'detect-collisions';
-import getStats from '../stats.js';
+import { getStats } from '../stats.js';
 import Entity from './Entity.js';
 export default class Bush extends Entity {
     stats = getStats('Bush');

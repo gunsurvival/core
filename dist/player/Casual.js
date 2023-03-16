@@ -1,6 +1,6 @@
-import SAT from 'sat';
 import Bullet from '../entity/Bullet.js';
 import Player from './Player.js';
+import { SATVector } from 'detect-collisions';
 export default class Casual extends Player {
     update(world, tickData) {
         super.update(world, tickData);
@@ -12,7 +12,7 @@ export default class Casual extends Player {
     }
     getSpeedV() {
         const speed = this.entity.stats.speed || this.fallbackSpeed;
-        return new SAT.Vector(this.state.keyboard.a ? -1 : this.state.keyboard.d ? 1 : 0, this.state.keyboard.w ? -1 : this.state.keyboard.s ? 1 : 0).scale((1 / Math.sqrt(2)) * speed);
+        return new SATVector(this.state.keyboard.a ? -1 : this.state.keyboard.d ? 1 : 0, this.state.keyboard.w ? -1 : this.state.keyboard.s ? 1 : 0).scale((1 / Math.sqrt(2)) * speed);
     }
     shoot(world) {
         if (this.coolDownSystem.isCoolingDown('shoot')) {
@@ -20,14 +20,8 @@ export default class Casual extends Player {
         }
         this.coolDownSystem.add('shoot', 100);
         // TODO: Xai Vector cua Sat2d co may ham co san thay vi math amogus
-        const vel = {
-            x: Math.cos(this.entity.body.angle) * 30,
-            y: Math.sin(this.entity.body.angle) * 30,
-        };
-        const bullet = new Bullet({
-            x: this.entity.body.pos.x + vel.x * 2,
-            y: this.entity.body.pos.y + vel.y * 2,
-        }, vel);
+        const vel = new SATVector(Math.cos(this.entity.body.angle) * 30, Math.sin(this.entity.body.angle) * 30);
+        const bullet = new Bullet(new SATVector(this.entity.body.pos.x + vel.x * 2, this.entity.body.pos.y + vel.y * 2), vel);
         world.add(bullet);
     }
 }

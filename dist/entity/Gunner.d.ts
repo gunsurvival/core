@@ -9,6 +9,7 @@ export type StatsGunner = {
 export default class Gunner extends Entity {
     stats: StatsGunner;
     body: Circle;
+    onCollisionEnter(other: Entity, response: Response): void;
     onCollisionStay(other: Entity, response: Response): void;
 }
 //# sourceMappingURL=Gunner.d.ts.map

@@ -1,6 +1,6 @@
 import { Circle } from 'detect-collisions';
 import Entity from './Entity.js';
-import getStats from '../stats.js';
+import { getStats } from '../stats.js';
 export default class Rock extends Entity {
     stats = getStats('Rock');
     body;

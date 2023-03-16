@@ -1,5 +1,5 @@
 import structuredClone from '@ungap/structured-clone';
-const stats = {
+export const stats = {
     AIGunner: {
         health: 100,
         speed: 5,
@@ -19,7 +19,7 @@ const stats = {
         radius: 10,
     },
 };
-export default function getStats(name) {
+export function getStats(name) {
     if (!stats[name]) {
         throw new Error(`Stats for ${name} not found`);
     }

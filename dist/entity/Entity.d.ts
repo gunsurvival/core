@@ -1,6 +1,6 @@
 /// <reference types="sat" resolution-mode="require"/>
 import { EventEmitter } from 'eventemitter3';
-import type { Body, Response } from 'detect-collisions';
+import { type Body, type Response } from 'detect-collisions';
 import type { ITickData } from '../types.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
