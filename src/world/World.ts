@@ -1,8 +1,8 @@
-import {EventEmitter} from 'eventemitter3';
 import {System, type Body, type Response} from 'detect-collisions';
+import {AsyncEE} from '../util/AsyncEE.js';
 import type Entity from '../entity/Entity.js';
 import {type ITickData} from '../types.js';
-import {MutateMap} from '../util/index.js';
+import {genId, MutateMap} from '../util/index.js';
 
 type BodyRefEntity = Body & {entityRef: Entity};
 type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
@@ -15,7 +15,7 @@ export default abstract class World {
 	collisionHashMap = new Map<string, Response>();
 	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
-	event = new EventEmitter();
+	event = new AsyncEE();
 
 	constructor() {
 		this.setupEvents();
@@ -23,12 +23,12 @@ export default abstract class World {
 
 	setupEvents() {
 		this.entities.onAdd = (entity: Entity) => {
-			this.event.emit('+entities', entity);
+			this.event.emit('+entities', entity).catch(console.error);
 			entity.onAdd(this);
 		};
 
 		this.entities.onRemove = (entity: Entity) => {
-			this.event.emit('-entities', entity);
+			this.event.emit('-entities', entity).catch(console.error);
 			entity.onRemove(this);
 		};
 	}
@@ -48,13 +48,14 @@ export default abstract class World {
 			this.physics.updateBody(entity.body);
 
 			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
-				const uniq = String(id) + response.b.entityRef.id;
+				const uniq = genId(entity, response.b.entityRef);
 				this.newCollisionHashMap.set(uniq, response);
 				if (this.collisionHashMap.has(uniq)) {
 					entity.onCollisionStay(response.b.entityRef, response);
 				} else {
 					this.collisionHashMap.set(uniq, response);
 					entity.onCollisionEnter(response.b.entityRef, response);
+					this.event.emit('collision', entity, response.b.entityRef).catch(console.error);
 				}
 			});
 
