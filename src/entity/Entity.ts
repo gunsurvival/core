@@ -1,6 +1,6 @@
-import {EventEmitter} from 'eventemitter3';
 import {type Body, type Response, SATVector} from 'detect-collisions';
 import type {ITickData} from '../types.js';
+import {AsyncEE} from '../util/AsyncEE.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
 import {safeId, MutateArray} from '../util/index.js';
@@ -12,7 +12,7 @@ export default abstract class Entity {
 	markAsRemove = false;
 	elapsedTick = 0;
 	effects = new MutateArray<Effect>(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
-	event = new EventEmitter();
+	event = new AsyncEE();
 	vel = new SATVector(0, 0);
 
 	abstract body: Body; // Server state: This is relate to physic so no need to use custom mutate variable, changes auto assign it at end of update
@@ -20,11 +20,11 @@ export default abstract class Entity {
 
 	constructor() {
 		this.effects.onAdd = (effect: Effect) => {
-			this.event.emit('+effects', effect);
+			this.event.emit('+effects', effect).catch(console.error);
 		};
 
 		this.effects.onRemove = (effect: Effect) => {
-			this.event.emit('-effects', effect);
+			this.event.emit('-effects', effect).catch(console.error);
 		};
 	}
 
