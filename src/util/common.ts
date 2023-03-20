@@ -1,3 +1,5 @@
+import type Entity from '../entity/Entity.js';
+
 export function lerp(start: number, end: number, amt: number) {
 	return ((1 - amt) * start) + (amt * end);
 }
@@ -23,4 +25,8 @@ export function lerpAngle(start: number, end: number, amt: number) {
 	];
 	rotates.sort((a, b) => a.result - b.result);
 	return lerp(start, rotates[0].beta, amt); // Lấy giá trị nhỏ nhất của góc quay
+}
+
+export function genId(e1: Entity, e2: Entity) {
+	return e1.id + e2.id;
 }
