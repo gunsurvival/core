@@ -1,9 +1,12 @@
+import random from 'random';
 import type Entity from '../entity/Entity.js';
 import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
 import Bullet from '../entity/Bullet.js';
 import Player from './Player.js';
 import {SATVector} from 'detect-collisions';
+
+const tolerance = random.normal(0, Math.PI / 64);
 
 export default class Casual<T extends Entity> extends Player<T> {
 	update(world: World, tickData: ITickData) {
@@ -16,6 +19,10 @@ export default class Casual<T extends Entity> extends Player<T> {
 		if (this.state.mouse.left) {
 			this.shoot(world);
 		}
+
+		// If ((this.entity.stats as {health: number}).health <= 0) {
+		// 	this.entity.markAsRemove = true;
+		// }
 	}
 
 	getSpeedV() {
@@ -37,9 +44,10 @@ export default class Casual<T extends Entity> extends Player<T> {
 
 		// TODO: Xai Vector cua Sat2d co may ham co san thay vi math amogus
 		const bullet = new Bullet(new SATVector(
-			this.entity.body.pos.x + Math.cos(this.entity.body.angle) * 30,
-			this.entity.body.pos.y + Math.sin(this.entity.body.angle) * 30,
-		), this.entity.body.angle, 30);
+			this.entity.body.pos.x + Math.cos(this.entity.body.angle) * 60,
+			this.entity.body.pos.y + Math.sin(this.entity.body.angle) * 60,
+		), this.entity.body.angle + Number(tolerance()), 40);
+		console.log();
 		world.add(bullet);
 	}
 }
