@@ -1,6 +1,7 @@
 import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
 import {safeId} from '../util/safeId.js';
+import type Entity from '../entity/Entity.js';
 
 export default abstract class Effect {
 	id: number = safeId();
@@ -10,5 +11,5 @@ export default abstract class Effect {
 		this.markAsRemove = true;
 	}
 
-	abstract calc(stats: unknown, world: World, tickData: ITickData): void;
+	abstract calc(entity: Entity, world: World, tickData: ITickData): void;
 }

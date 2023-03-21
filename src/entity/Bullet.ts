@@ -13,6 +13,7 @@ export type StatsBullet = {
 export default class Bullet extends Entity {
 	body: Body;
 	stats = getStats<StatsBullet>('Bullet');
+	_stats = getStats<StatsBullet>('Bullet');
 	speed = 0;
 
 	constructor(pos: SATVector, angle: number, speed: number) {
@@ -37,8 +38,7 @@ export default class Bullet extends Entity {
 	onCollisionEnter(other: Entity, response: SAT.Response) {
 		// TODO: XAi SAT.VECTOR
 		if (other.constructor.name === 'Gunner') {
-			this.body.angle = Math.atan2(-response.overlapN.y, -response.overlapN.x);
-			this.speed = response.overlapV.len() / 1.5;
+			this.markAsRemove = true;
 		}
 
 		if (other.constructor.name === 'Rock') {

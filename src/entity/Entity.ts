@@ -5,6 +5,7 @@ import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
 import {safeId, MutateArray} from '../util/index.js';
 import {getStats} from '../stats.js';
+import structuredClone from '@ungap/structured-clone';
 
 export default abstract class Entity {
 	id = String(safeId());
@@ -16,7 +17,8 @@ export default abstract class Entity {
 	vel = new SATVector(0, 0);
 
 	abstract body: Body; // Server state: This is relate to physic so no need to use custom mutate variable, changes auto assign it at end of update
-	abstract stats: unknown; // Need to be re-define interface in child class
+	abstract stats: Record<string, unknown>; // Redefine this in the child class. Base stats that are not affected by effects
+	abstract _stats: Record<string, unknown>; // Like above but this is used to calculate effects that have a duration
 
 	constructor() {
 		this.effects.onAdd = (effect: Effect) => {
@@ -30,7 +32,7 @@ export default abstract class Entity {
 
 	beforeUpdate(world: World, tickData: ITickData) {
 		this.elapsedTick++;
-		this.stats = getStats(this.constructor.name);
+		this._stats = structuredClone(this.stats);
 		// Iterate over effects and calculate them
 		// if effect is done or marked as remove, remove it
 		for (let i = 0; i < this.effects.length; i++) {
@@ -39,7 +41,7 @@ export default abstract class Entity {
 				continue;
 			}
 
-			this.effects[i].calc(this.stats, world, tickData);
+			this.effects[i].calc(this, world, tickData);
 		}
 
 		this.body.pos.add(this.vel.scale(tickData.delta));

@@ -8,6 +8,7 @@ export type StatsRock = {
 
 export default class Rock extends Entity {
 	stats = getStats<StatsRock>('Rock');
+	_stats = getStats<StatsRock>('Rock');
 	body: Body;
 
 	constructor(pos: SATVector, bodyOptions: BodyOptions = {}) {

@@ -11,12 +11,17 @@ export type StatsGunner = {
 
 export default class Gunner extends Entity {
 	stats = getStats<StatsGunner>('Gunner');
-	body = new Circle({x: 1, y: 1}, 40, {});
+	_stats = getStats<StatsGunner>('Gunner');
+	body = new Circle({x: 1, y: 1}, this.stats.radius, {});
 
 	onCollisionEnter(other: Entity, response: Response) {
 		switch (other.constructor.name) {
 			case 'Bullet':
 				this.stats.health -= (other as Bullet).speed;
+				if (this.stats.health <= 0) {
+					this.stats.health = 0;
+				}
+
 				break;
 			default:
 				break;
