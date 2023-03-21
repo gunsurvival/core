@@ -13,6 +13,7 @@
 	"author": "khoakomlem",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/random": "^3.0.1",
 		"@types/ungap__structured-clone": "^0.3.0",
 		"@typescript-eslint/eslint-plugin": ">=5.43.0",
 		"@typescript-eslint/parser": ">=5.43.0",
@@ -27,6 +28,7 @@
 		"@ungap/structured-clone": "^1.0.2",
 		"await-to-js": "^3.0.0",
 		"detect-collisions": "^6.6.11",
+		"random": "^4.1.0",
 		"sat": "^0.9.0"
 	},
 	"exports": {
