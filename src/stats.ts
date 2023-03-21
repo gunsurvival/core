@@ -11,7 +11,7 @@ export const stats: Record<string, Record<string, string | number | boolean>> = 
 	Gunner: {
 		health: 100,
 		speed: 4,
-		radius: 50,
+		radius: 40,
 	},
 	Rock: {
 		radius: 90,
