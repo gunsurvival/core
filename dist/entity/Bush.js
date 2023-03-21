@@ -3,6 +3,7 @@ import { getStats } from '../stats.js';
 import Entity from './Entity.js';
 export default class Bush extends Entity {
     stats = getStats('Bush');
+    _stats = getStats('Bush');
     body;
     constructor(pos, bodyOptions = {}) {
         super();

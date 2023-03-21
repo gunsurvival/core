@@ -1,7 +1,7 @@
 /// <reference types="sat" resolution-mode="require"/>
-import { EventEmitter } from 'eventemitter3';
-import { type Body, type Response } from 'detect-collisions';
+import { type Body, type Response, SATVector } from 'detect-collisions';
 import type { ITickData } from '../types.js';
+import { AsyncEE } from '../util/AsyncEE.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
 import { MutateArray } from '../util/index.js';
@@ -11,9 +11,11 @@ export default abstract class Entity {
     markAsRemove: boolean;
     elapsedTick: number;
     effects: MutateArray<Effect>;
-    event: EventEmitter<string | symbol, any>;
+    event: AsyncEE;
+    vel: SATVector;
     abstract body: Body;
-    abstract stats: unknown;
+    abstract stats: Record<string, unknown>;
+    abstract _stats: Record<string, unknown>;
     constructor();
     beforeUpdate(world: World, tickData: ITickData): void;
     afterUpdate(world: World, tickData: ITickData): void;
@@ -25,5 +27,6 @@ export default abstract class Entity {
     onCollisionStay(other: Entity, response: Response): void;
     onCollisionExit(other: Entity, response: Response): void;
     init(data: Record<string, unknown>): void;
+    assign(initData: Record<string, unknown>): void;
 }
 //# sourceMappingURL=Entity.d.ts.map

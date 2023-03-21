@@ -5,16 +5,19 @@ import type World from '../world/World.js';
 import Entity from './Entity.js';
 export type StatsBullet = {
     radius: number;
+    speed: number;
 };
 export default class Bullet extends Entity {
     body: Body;
     stats: StatsBullet;
-    vel: SATVector;
-    constructor(pos: SATVector, vel?: SATVector);
+    _stats: StatsBullet;
+    speed: number;
+    constructor(pos: SATVector, angle: number, speed: number);
     update(world: World, tickData: ITickData): void;
     onCollisionEnter(other: Entity, response: SAT.Response): void;
     init(data: {
-        vel: SATVector;
+        angle: number;
+        speed: number;
     }): void;
 }
 //# sourceMappingURL=Bullet.d.ts.map

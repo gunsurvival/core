@@ -4,39 +4,38 @@ import Entity from './Entity.js';
 export default class Bullet extends Entity {
     body;
     stats = getStats('Bullet');
-    vel;
-    constructor(pos, vel = new SATVector(0, 0)) {
+    _stats = getStats('Bullet');
+    speed = 0;
+    constructor(pos, angle, speed) {
         super();
         this.body = new Circle(pos, this.stats.radius);
-        this.vel = vel;
+        this.speed = speed;
+        this.body.angle = angle;
     }
     update(world, tickData) {
-        this.body.pos.x += this.vel.x * tickData.delta;
-        this.body.pos.y += this.vel.y * tickData.delta;
-        this.vel.x *= 0.97;
-        this.vel.y *= 0.97;
-        if (this.vel.x ** 2 + this.vel.y ** 2 < 0.001) {
-            world.remove(this);
+        const vel = new SATVector(Math.cos(this.body.angle) * this.speed, Math.sin(this.body.angle) * this.speed);
+        this.body.pos.add(vel.scale(tickData.delta));
+        this.speed *= 0.98;
+        if (this.speed < 0.001) {
+            this.markAsRemove = true;
         }
     }
     onCollisionEnter(other, response) {
         // TODO: XAi SAT.VECTOR
-        const speed = Math.sqrt(this.vel.x ** 2 + this.vel.y ** 2);
         if (other.constructor.name === 'Gunner') {
-            this.vel.x = -response.overlapN.x * speed / 1.5;
-            this.vel.y = -response.overlapN.y * speed / 1.5;
+            this.markAsRemove = true;
         }
         if (other.constructor.name === 'Rock') {
             this.body.pos.x -= response.overlapV.x;
             this.body.pos.y -= response.overlapV.y;
-            this.vel.x = -response.overlapN.x * speed / 1.5;
-            this.vel.y = -response.overlapN.y * speed / 1.5;
+            this.body.angle = Math.atan2(-response.overlapN.y, -response.overlapN.x);
+            this.speed /= 2;
         }
     }
     init(data) {
         super.init(data);
-        this.vel.x = data.vel.x;
-        this.vel.y = data.vel.y;
+        this.body.angle = data.angle;
+        this.speed = data.speed;
     }
 }
 //# sourceMappingURL=Bullet.js.map

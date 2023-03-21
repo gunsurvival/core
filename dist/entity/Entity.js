@@ -1,25 +1,26 @@
-import { EventEmitter } from 'eventemitter3';
 import { SATVector } from 'detect-collisions';
+import { AsyncEE } from '../util/AsyncEE.js';
 import { safeId, MutateArray } from '../util/index.js';
-import { getStats } from '../stats.js';
+import structuredClone from '@ungap/structured-clone';
 export default class Entity {
     id = String(safeId());
     name = this.constructor.name;
     markAsRemove = false;
     elapsedTick = 0;
     effects = new MutateArray(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
-    event = new EventEmitter();
+    event = new AsyncEE();
+    vel = new SATVector(0, 0);
     constructor() {
         this.effects.onAdd = (effect) => {
-            this.event.emit('+effects', effect);
+            this.event.emit('+effects', effect).catch(console.error);
         };
         this.effects.onRemove = (effect) => {
-            this.event.emit('-effects', effect);
+            this.event.emit('-effects', effect).catch(console.error);
         };
     }
     beforeUpdate(world, tickData) {
         this.elapsedTick++;
-        this.stats = getStats(this.constructor.name);
+        this._stats = structuredClone(this.stats);
         // Iterate over effects and calculate them
         // if effect is done or marked as remove, remove it
         for (let i = 0; i < this.effects.length; i++) {
@@ -27,8 +28,9 @@ export default class Entity {
                 this.effects.removeIndex(i--);
                 continue;
             }
-            this.effects[i].calc(this.stats, world, tickData);
+            this.effects[i].calc(this, world, tickData);
         }
+        this.body.pos.add(this.vel.scale(tickData.delta));
     }
     afterUpdate(world, tickData) {
     }
@@ -48,6 +50,9 @@ export default class Entity {
         this.body.setScale(dataFormatted.scale);
         this.body.setPosition(dataFormatted.pos.x, dataFormatted.pos.y);
         this.body.setOffset(new SATVector(dataFormatted.offset.x, dataFormatted.offset.y));
+    }
+    assign(initData) {
+        Object.assign(this, initData);
     }
 }
 //# sourceMappingURL=Entity.js.map

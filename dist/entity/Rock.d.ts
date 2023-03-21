@@ -6,6 +6,7 @@ export type StatsRock = {
 };
 export default class Rock extends Entity {
     stats: StatsRock;
+    _stats: StatsRock;
     body: Body;
     constructor(pos: SATVector, bodyOptions?: BodyOptions);
     onCollisionStay(other: Entity, response: Response): void;

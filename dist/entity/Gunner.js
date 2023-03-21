@@ -3,11 +3,15 @@ import { getStats } from '../stats.js';
 import Entity from './Entity.js';
 export default class Gunner extends Entity {
     stats = getStats('Gunner');
-    body = new Circle({ x: 1, y: 1 }, 40, {});
+    _stats = getStats('Gunner');
+    body = new Circle({ x: 1, y: 1 }, this.stats.radius, {});
     onCollisionEnter(other, response) {
         switch (other.constructor.name) {
             case 'Bullet':
-                this.stats.health -= other.vel.len();
+                this.stats.health -= other.speed;
+                if (this.stats.health <= 0) {
+                    this.stats.health = 0;
+                }
                 break;
             default:
                 break;

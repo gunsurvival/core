@@ -1,6 +1,6 @@
 /// <reference types="sat" resolution-mode="require"/>
-import { EventEmitter } from 'eventemitter3';
 import { System, type Response } from 'detect-collisions';
+import { AsyncEE } from '../util/AsyncEE.js';
 import type Entity from '../entity/Entity.js';
 import { type ITickData } from '../types.js';
 import { MutateMap } from '../util/index.js';
@@ -9,7 +9,7 @@ export default abstract class World {
     collisionHashMap: Map<string, Response>;
     newCollisionHashMap: Map<string, Response>;
     physics: System;
-    event: EventEmitter<string | symbol, any>;
+    event: AsyncEE;
     constructor();
     setupEvents(): void;
     nextTick(tickData: ITickData): void;

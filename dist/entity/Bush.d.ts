@@ -6,6 +6,7 @@ export type StatsBush = {
 };
 export default class Bush extends Entity {
     stats: StatsBush;
+    _stats: StatsBush;
     body: Body;
     constructor(pos: SATVector, bodyOptions?: BodyOptions);
 }

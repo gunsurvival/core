@@ -3,6 +3,7 @@ import Entity from './Entity.js';
 import { getStats } from '../stats.js';
 export default class Rock extends Entity {
     stats = getStats('Rock');
+    _stats = getStats('Rock');
     body;
     constructor(pos, bodyOptions = {}) {
         super();

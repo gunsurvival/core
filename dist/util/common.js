@@ -23,4 +23,7 @@ export function lerpAngle(start, end, amt) {
     rotates.sort((a, b) => a.result - b.result);
     return lerp(start, rotates[0].beta, amt); // Lấy giá trị nhỏ nhất của góc quay
 }
+export function genId(e1, e2) {
+    return e1.id + e2.id;
+}
 //# sourceMappingURL=common.js.map
