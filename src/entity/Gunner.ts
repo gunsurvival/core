@@ -1,4 +1,4 @@
-import {type Response, Circle} from 'detect-collisions';
+import {type Response, Circle, SATVector, type Body} from 'detect-collisions';
 import type Bullet from './Bullet.js';
 import {getStats} from '../stats.js';
 import Entity from './Entity.js';
@@ -10,9 +10,14 @@ export type StatsGunner = {
 };
 
 export default class Gunner extends Entity {
-	stats = getStats<StatsGunner>('Gunner');
-	_stats = getStats<StatsGunner>('Gunner');
-	body = new Circle({x: 1, y: 1}, this.stats.radius, {});
+	stats = getStats('Gunner');
+	_stats = getStats('Gunner');
+	body: Body;
+
+	constructor(pos = new SATVector(0, 0)) {
+		super();
+		this.body = new Circle(pos, this.stats.radius);
+	}
 
 	onCollisionEnter(other: Entity, response: Response) {
 		switch (other.constructor.name) {

@@ -1,34 +1,25 @@
 import {type Body, SATVector, Circle} from 'detect-collisions';
-import {genId} from '../index.js';
 import {getStats} from '../stats.js';
 import {type ITickData} from '../types.js';
 import type World from '../world/World.js';
 import Entity from './Entity.js';
 
-export type StatsBullet = {
-	radius: number;
-	speed: number;
-};
-
 export default class Bullet extends Entity {
+	stats = getStats('Bullet');
+	_stats = getStats('Bullet');
 	body: Body;
-	stats = getStats<StatsBullet>('Bullet');
-	_stats = getStats<StatsBullet>('Bullet');
-	speed = 0;
+	speed: number;
 
-	constructor(pos: SATVector, angle: number, speed: number) {
+	constructor(pos = new SATVector(0, 0), angle = 0, speed = 0) {
 		super();
 		this.body = new Circle(pos, this.stats.radius);
-		this.speed = speed;
 		this.body.angle = angle;
+		this.speed = speed;
 	}
 
 	update(world: World, tickData: ITickData): void {
-		const vel = new SATVector(
-			Math.cos(this.body.angle) * this.speed,
-			Math.sin(this.body.angle) * this.speed,
-		);
-		this.body.pos.add(vel.scale(tickData.delta));
+		this.vel.x = Math.cos(this.body.angle) * this.speed;
+		this.vel.y = Math.sin(this.body.angle) * this.speed;
 		this.speed *= 0.98;
 		if (this.speed < 0.001) {
 			this.markAsRemove = true;
@@ -36,7 +27,6 @@ export default class Bullet extends Entity {
 	}
 
 	onCollisionEnter(other: Entity, response: SAT.Response) {
-		// TODO: XAi SAT.VECTOR
 		if (other.constructor.name === 'Gunner') {
 			this.markAsRemove = true;
 		}
@@ -49,9 +39,8 @@ export default class Bullet extends Entity {
 		}
 	}
 
-	init(data: {angle: number; speed: number}) {
+	init(data: {speed: number}) {
 		super.init(data);
-		this.body.angle = data.angle;
 		this.speed = data.speed;
 	}
 }
