@@ -2,7 +2,7 @@ import {System, type Body, type Response} from 'detect-collisions';
 import {AsyncEE} from '../util/AsyncEE.js';
 import type Entity from '../entity/Entity.js';
 import {type ITickData} from '../types.js';
-import {genId, MutateMap} from '../util/index.js';
+import {genId} from '../util/index.js';
 
 type BodyRefEntity = Body & {entityRef: Entity};
 type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
@@ -11,40 +11,23 @@ type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
 };
 
 export default abstract class World {
-	entities = new MutateMap<string, Entity>();
+	entities = new Map<string, Entity>();
 	collisionHashMap = new Map<string, Response>();
 	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
 	event = new AsyncEE();
-
-	constructor() {
-		this.setupEvents();
-	}
-
-	setupEvents() {
-		this.entities.onAdd = (entity: Entity) => {
-			this.event.emit('+entities', entity).catch(console.error);
-			entity.onAdd(this);
-		};
-
-		this.entities.onRemove = (entity: Entity) => {
-			this.event.emit('-entities', entity).catch(console.error);
-			entity.onRemove(this);
-		};
-	}
 
 	nextTick(tickData: ITickData) {
 		this.newCollisionHashMap.clear();
 
 		this.entities.forEach((entity: Entity, id) => {
 			if (entity.markAsRemove) {
-				this.physics.remove(entity.body);
-				this.entities.delete(id);
+				this.remove(entity);
 				return;
 			}
 
 			entity.beforeUpdate(this, tickData);
-			entity.update(this, tickData); // User defined update
+			entity.update(this, tickData);
 			this.physics.updateBody(entity.body);
 
 			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
@@ -55,7 +38,8 @@ export default abstract class World {
 				} else {
 					this.collisionHashMap.set(uniq, response);
 					entity.onCollisionEnter(response.b.entityRef, response);
-					this.event.emit('collision', entity, response.b.entityRef).catch(console.error);
+					this.event.emit('collision-enter', entity, response.b.entityRef).catch(console.error);
+					entity.event.emit('collision-enter', response.b.entityRef).catch(console.error);
 				}
 			});
 
@@ -65,6 +49,8 @@ export default abstract class World {
 			if (!this.newCollisionHashMap.has(uniq)) {
 				response.a.entityRef.onCollisionExit(response.b.entityRef, response);
 				this.collisionHashMap.delete(uniq);
+				this.event.emit('collision-exit', response.a.entityRef, response.b.entityRef).catch(console.error);
+				response.a.entityRef.event.emit('collision-exit', response.b.entityRef).catch(console.error);
 			}
 		});
 	}
@@ -74,10 +60,14 @@ export default abstract class World {
 		this.entities.set(entity.id, entity);
 		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
 		// Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
+		this.event.emit('+entities', entity).catch(console.error);
+		entity.onAdd(this);
 	}
 
 	remove(entity: Entity) {
 		this.physics.remove(entity.body);
 		this.entities.delete(entity.id);
+		this.event.emit('-entities', entity).catch(console.error);
+		entity.onRemove(this);
 	}
 }
