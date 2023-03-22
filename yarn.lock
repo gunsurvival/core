@@ -1117,6 +1117,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+visibility-polygon@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/visibility-polygon/-/visibility-polygon-1.1.0.tgz#5eca610f188bb5c2355b600319cb6c3cf8d37342"
+  integrity sha512-zc7pbUJwCWt+GOZPfu4MI1c+OybWrPZBrHF6F8WYR49yWUYjnyeodSANrv/eWRTEaP89h75Sr+Wlv1OZrF97nw==
+
 which@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"
