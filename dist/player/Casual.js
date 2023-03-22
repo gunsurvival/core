@@ -2,7 +2,7 @@ import random from 'random';
 import Bullet from '../entity/Bullet.js';
 import Player from './Player.js';
 import { SATVector } from 'detect-collisions';
-const tolerance = random.normal(0, Math.PI / 64);
+const tolerance = random.normal(0, Math.PI / 128);
 export default class Casual extends Player {
     update(world, tickData) {
         super.update(world, tickData);
@@ -24,9 +24,7 @@ export default class Casual extends Player {
             return;
         }
         this.coolDownSystem.add('shoot', 100);
-        // TODO: Xai Vector cua Sat2d co may ham co san thay vi math amogus
-        const bullet = new Bullet(new SATVector(this.entity.body.pos.x + Math.cos(this.entity.body.angle) * 60, this.entity.body.pos.y + Math.sin(this.entity.body.angle) * 60), this.entity.body.angle + Number(tolerance()), 40);
-        console.log();
+        const bullet = new Bullet(new SATVector(this.entity.body.pos.x + Math.cos(this.entity.body.angle) * 60, this.entity.body.pos.y + Math.sin(this.entity.body.angle) * 60), this.entity.body.angle + Number(tolerance()), 30);
         world.add(bullet);
     }
 }

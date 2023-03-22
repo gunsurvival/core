@@ -1,14 +1,19 @@
 /// <reference types="sat" resolution-mode="require"/>
-import { type BodyOptions, type Response, type Body, type SATVector } from 'detect-collisions';
+import { type Response, SATVector, type Body } from 'detect-collisions';
 import Entity from './Entity.js';
-export type StatsRock = {
-    radius: number;
-};
+import { type stats } from '../stats.js';
+export type StatsRock = typeof stats.Rock;
 export default class Rock extends Entity {
-    stats: StatsRock;
-    _stats: StatsRock;
+    stats: {
+        radius: number;
+        health: number;
+    };
+    _stats: {
+        radius: number;
+        health: number;
+    };
     body: Body;
-    constructor(pos: SATVector, bodyOptions?: BodyOptions);
+    constructor(pos?: SATVector);
     onCollisionStay(other: Entity, response: Response): void;
 }
 //# sourceMappingURL=Rock.d.ts.map

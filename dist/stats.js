@@ -14,6 +14,7 @@ export const stats = {
     },
     Rock: {
         radius: 90,
+        health: 100,
     },
     Bullet: {
         radius: 10,

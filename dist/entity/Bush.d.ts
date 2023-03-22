@@ -1,13 +1,17 @@
 /// <reference types="sat" resolution-mode="require"/>
-import { type BodyOptions, type Body, type SATVector } from 'detect-collisions';
+import { type Body, SATVector } from 'detect-collisions';
 import Entity from './Entity.js';
 export type StatsBush = {
     radius: number;
 };
 export default class Bush extends Entity {
-    stats: StatsBush;
-    _stats: StatsBush;
+    stats: {
+        radius: number;
+    };
+    _stats: {
+        radius: number;
+    };
     body: Body;
-    constructor(pos: SATVector, bodyOptions?: BodyOptions);
+    constructor(pos?: SATVector);
 }
 //# sourceMappingURL=Bush.d.ts.map

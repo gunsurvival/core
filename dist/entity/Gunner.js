@@ -1,10 +1,14 @@
-import { Circle } from 'detect-collisions';
+import { Circle, SATVector } from 'detect-collisions';
 import { getStats } from '../stats.js';
 import Entity from './Entity.js';
 export default class Gunner extends Entity {
     stats = getStats('Gunner');
     _stats = getStats('Gunner');
-    body = new Circle({ x: 1, y: 1 }, this.stats.radius, {});
+    body;
+    constructor(pos = new SATVector(0, 0)) {
+        super();
+        this.body = new Circle(pos, this.stats.radius);
+    }
     onCollisionEnter(other, response) {
         switch (other.constructor.name) {
             case 'Bullet':

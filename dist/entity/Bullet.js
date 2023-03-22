@@ -2,26 +2,25 @@ import { SATVector, Circle } from 'detect-collisions';
 import { getStats } from '../stats.js';
 import Entity from './Entity.js';
 export default class Bullet extends Entity {
-    body;
     stats = getStats('Bullet');
     _stats = getStats('Bullet');
-    speed = 0;
-    constructor(pos, angle, speed) {
+    body;
+    speed;
+    constructor(pos = new SATVector(0, 0), angle = 0, speed = 0) {
         super();
         this.body = new Circle(pos, this.stats.radius);
-        this.speed = speed;
         this.body.angle = angle;
+        this.speed = speed;
     }
     update(world, tickData) {
-        const vel = new SATVector(Math.cos(this.body.angle) * this.speed, Math.sin(this.body.angle) * this.speed);
-        this.body.pos.add(vel.scale(tickData.delta));
+        this.vel.x = Math.cos(this.body.angle) * this.speed;
+        this.vel.y = Math.sin(this.body.angle) * this.speed;
         this.speed *= 0.98;
         if (this.speed < 0.001) {
             this.markAsRemove = true;
         }
     }
     onCollisionEnter(other, response) {
-        // TODO: XAi SAT.VECTOR
         if (other.constructor.name === 'Gunner') {
             this.markAsRemove = true;
         }
@@ -34,7 +33,6 @@ export default class Bullet extends Entity {
     }
     init(data) {
         super.init(data);
-        this.body.angle = data.angle;
         this.speed = data.speed;
     }
 }
