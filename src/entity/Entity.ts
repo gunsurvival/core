@@ -19,8 +19,8 @@ export default abstract class Entity {
 	visibility: Vector2D[];
 
 	abstract body: Body; // Server state: This is relate to physic so no need to use custom mutate variable, changes auto assign it at end of update
-	abstract stats: Record<string, unknown>; // Redefine this in the child class. Base stats that are not affected by effects
-	abstract _stats: Record<string, unknown>; // Like above but this is used to calculate effects that have a duration
+	abstract stats: typeof stats[keyof typeof stats]; // Redefine this in the child class. Base stats that are not affected by effects
+	abstract _stats: typeof stats[keyof typeof stats]; // Like above but this is used to calculate effects that have a duration
 
 	beforeUpdate(world: World, tickData: ITickData) {
 		this.elapsedTick++;
