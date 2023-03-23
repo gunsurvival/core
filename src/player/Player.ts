@@ -1,3 +1,4 @@
+import {AsyncEE} from './../util/AsyncEE.js';
 import type {ITickData} from '../types.js';
 import CoolDownSystem from '../util/CoolDownSystem.js';
 import type World from '../world/World.js';
@@ -30,6 +31,7 @@ export default abstract class Player<T extends Entity> {
 		},
 	};
 
+	event = new AsyncEE();
 	coolDownSystem = new CoolDownSystem();
 
 	playAs(entity: T) {
