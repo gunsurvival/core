@@ -26,7 +26,7 @@ export default class Casual<T extends Entity> extends Player<T> {
 	}
 
 	getSpeedV() {
-		const speed = (this.entity.stats as {speed: number}).speed || this.fallbackSpeed;
+		const speed = (this.entity._stats as {speed: number}).speed || this.fallbackSpeed;
 		return new SATVector(
 			this.state.keyboard.a ? -1 : this.state.keyboard.d ? 1 : 0,
 			this.state.keyboard.w ? -1 : this.state.keyboard.s ? 1 : 0,
@@ -41,6 +41,7 @@ export default class Casual<T extends Entity> extends Player<T> {
 		}
 
 		this.coolDownSystem.add('shoot', 100);
+		this.event.emit('shoot').catch(console.error);
 
 		const bullet = new Bullet(new SATVector(
 			this.entity.body.pos.x + Math.cos(this.entity.body.angle) * 60,
