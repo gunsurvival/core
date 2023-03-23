@@ -2,6 +2,7 @@ import {type Response, Circle, SATVector, type Body} from 'detect-collisions';
 import type Bullet from './Bullet.js';
 import {getStats} from '../stats.js';
 import Entity from './Entity.js';
+import Slow from '../effect/Slow.js';
 
 export type StatsGunner = {
 	health: number;
@@ -28,6 +29,13 @@ export default class Gunner extends Entity {
 				}
 
 				break;
+			case 'Bush':
+				if (!this.effects.get('slow-on-bush')) {
+					this.addEffect('slow-on-bush', new Slow(0.5));
+					console.log('addeed');
+				}
+
+				break;
 			default:
 				break;
 		}
@@ -40,6 +48,18 @@ export default class Gunner extends Entity {
 					this.body.pos.x - (response.overlapV.x + response.overlapN.x) / 2,
 					this.body.pos.y - (response.overlapV.y + response.overlapN.y) / 2,
 				);
+				break;
+			default:
+				break;
+		}
+	}
+
+	onCollisionExit(other: Entity, response: Response) {
+		switch (other.constructor.name) {
+			case 'Bush':
+				this.removeEffect('slow-on-bush');
+				console.log('remove');
+
 				break;
 			default:
 				break;
