@@ -1,3 +1,4 @@
+import {type stats} from './../stats.js';
 import {quickDecomp} from 'poly-decomp';
 import {computeViewport, type Vector2D} from 'visibility-polygon';
 import structuredClone from '@ungap/structured-clone';
@@ -13,7 +14,7 @@ export default abstract class Entity {
 	name: string = this.constructor.name;
 	markAsRemove = false;
 	elapsedTick = 0;
-	effects = new Array<Effect>(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
+	effects = new Map<string, Effect>(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
 	event = new AsyncEE();
 	vel = new SATVector(0, 0);
 	visibility: Vector2D[];
@@ -27,15 +28,15 @@ export default abstract class Entity {
 		this._stats = structuredClone(this.stats);
 		// Iterate over effects and calculate them
 		// if effect is done or marked as remove, remove it
-		// eslint-disable-next-line @typescript-eslint/prefer-for-of
-		for (let i = 0; i < this.effects.length; i++) {
-			if (this.effects[i].markAsRemove) {
-				this.removeEffect(this.effects[i]);
-				continue;
+
+		this.effects.forEach((effect, id) => {
+			if (effect.markAsRemove) {
+				this.removeEffect(id);
+				return;
 			}
 
-			this.effects[i].calc(this, world, tickData);
-		}
+			effect.calc(this, world, tickData);
+		});
 
 		this.body.pos.x += this.vel.x * tickData.delta;
 		this.body.pos.y += this.vel.y * tickData.delta;
@@ -78,18 +79,18 @@ export default abstract class Entity {
 		Object.assign(this, initData);
 	}
 
-	addEffect(effect: Effect) {
-		this.effects.push(effect);
+	addEffect(id: string, effect: Effect) {
+		this.effects.set(id, effect);
 		this.event.emit('+effects', effect).catch(console.error);
 	}
 
-	removeEffect(effect: Effect) {
-		const index = this.effects.indexOf(effect);
-		if (index === -1) {
+	removeEffect(id: string) {
+		const effect = this.effects.get(id);
+		if (!effect) {
 			return;
 		}
 
-		this.effects.splice(index, 1);
+		this.effects.delete(id);
 		this.event.emit('-effects', effect).catch(console.error);
 	}
 }
