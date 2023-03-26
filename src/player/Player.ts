@@ -34,8 +34,29 @@ export default abstract class Player<T extends Entity> {
 	event = new AsyncEE();
 	coolDownSystem = new CoolDownSystem();
 
+	constructor(public isOnline = false) {}
+
 	playAs(entity: T) {
 		this.entity = entity;
+		this.bindEvents(entity);
+	}
+
+	bindEvents(entity: Entity) {
+		entity.event.on('collision-enter', () => {
+			// This.event.emit('collision-enter');
+		});
+		entity.event.on('collision-exit', () => {
+			// This.event.emit('collision-exit');
+		});
+	}
+
+	unbindEvents(entity: Entity) {
+		// Entity.event.off('collision-enter');
+		// entity.event.off('collision-exit');
+	}
+
+	get isReady() {
+		return Boolean(this.entity);
 	}
 
 	update(world: World, tickData: ITickData) {
