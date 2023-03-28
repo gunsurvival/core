@@ -7,6 +7,7 @@ import type Entity from '../entity/Entity.js';
 export default abstract class Player<T extends Entity> {
 	entity: T;
 	fallbackSpeed = 5;
+	event = new AsyncEE();
 	state = {
 		keyboard: {
 			w: false,

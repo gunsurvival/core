@@ -6,9 +6,29 @@ import Bullet from '../entity/Bullet.js';
 import Player from './Player.js';
 import {SATVector} from 'detect-collisions';
 
-const tolerance = random.normal(0, Math.PI / 128);
+export default class Casual extends Player {
+	constructor(isOnline = false) {
+		super(isOnline);
 
-export default class Casual<T extends Entity> extends Player<T> {
+		this.event.on('mousedown', (mouse: MouseEvent) => {
+			if (this.isOnline) {
+				switch (mouse.button) {
+					case 0:
+						this.state.mouse.left = true;
+						break;
+					case 1:
+						this.state.mouse.middle = true;
+						break;
+					case 2:
+						this.state.mouse.right = true;
+						break;
+					default:
+						break;
+				}
+			}
+		});
+	}
+
 	update(world: World, tickData: ITickData) {
 		super.update(world, tickData);
 		const vel = this.getSpeedV().scale(tickData.delta);
