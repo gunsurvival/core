@@ -1,14 +1,13 @@
-import random from 'random';
-import type Entity from '../entity/Entity.js';
 import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
-import Bullet from '../entity/Bullet.js';
 import Player from './Player.js';
 import {SATVector} from 'detect-collisions';
+import Ak47 from '../item/Ak47.js';
 
 export default class Casual extends Player {
 	constructor(isOnline = false) {
 		super(isOnline);
+		this.inventory.addItem(new Ak47()).catch(console.error);
 
 		this.event.on('mousedown', (mouse: MouseEvent) => {
 			if (this.isOnline) {
@@ -36,13 +35,9 @@ export default class Casual extends Player {
 			this.entity.body.x + vel.x,
 			this.entity.body.y + vel.y,
 		);
-		if (this.state.mouse.left) {
-			this.shoot(world);
+		if (this.state.mouse.left && this.inventory.current.length > 0) {
+			this.inventory.current[0]?.primaryAction(this, world, tickData);
 		}
-
-		// If ((this.entity.stats as {health: number}).health <= 0) {
-		// 	this.entity.markAsRemove = true;
-		// }
 	}
 
 	getSpeedV() {
@@ -53,20 +48,5 @@ export default class Casual extends Player {
 		).scale(
 			(1 / Math.sqrt(2)) * speed,
 		);
-	}
-
-	shoot(world: World) {
-		if (this.coolDownSystem.isCoolingDown('shoot')) {
-			return;
-		}
-
-		this.coolDownSystem.add('shoot', 100);
-		this.event.emit('shoot').catch(console.error);
-
-		const bullet = new Bullet(new SATVector(
-			this.entity.body.pos.x + Math.cos(this.entity.body.angle) * 60,
-			this.entity.body.pos.y + Math.sin(this.entity.body.angle) * 60,
-		), this.entity.body.angle + Number(tolerance()), 30);
-		world.add(bullet);
 	}
 }

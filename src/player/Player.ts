@@ -1,13 +1,14 @@
 import {AsyncEE} from './../util/AsyncEE.js';
 import type {ITickData} from '../types.js';
-import CoolDownSystem from '../util/CoolDownSystem.js';
 import type World from '../world/World.js';
 import type Entity from '../entity/Entity.js';
+import Inventory from '../Inventory.js';
 
-export default abstract class Player<T extends Entity> {
+export default abstract class Player<T extends Entity = Entity> {
 	entity: T;
 	fallbackSpeed = 5;
 	event = new AsyncEE();
+	inventory = new Inventory(4);
 	state = {
 		keyboard: {
 			w: false,
@@ -32,10 +33,11 @@ export default abstract class Player<T extends Entity> {
 		},
 	};
 
-	event = new AsyncEE();
-	coolDownSystem = new CoolDownSystem();
-
 	constructor(public isOnline = false) {}
+
+	get isReady() {
+		return Boolean(this.entity);
+	}
 
 	playAs(entity: T) {
 		this.entity = entity;
@@ -56,11 +58,7 @@ export default abstract class Player<T extends Entity> {
 		// entity.event.off('collision-exit');
 	}
 
-	get isReady() {
-		return Boolean(this.entity);
-	}
-
 	update(world: World, tickData: ITickData) {
-		this.coolDownSystem.update(tickData);
+		this.inventory.update(tickData);
 	}
 }
