@@ -13,6 +13,10 @@ export default class CoolDownSystem {
 		return this.list.get(key)! > 0;
 	}
 
+	isReady(key = 'default') {
+		return !this.isCoolingDown(key);
+	}
+
 	add(key: string, time: number) {
 		this.list.set(key, time);
 	}
