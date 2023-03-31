@@ -5,7 +5,7 @@ import {AsyncEE} from './util/AsyncEE.js';
 export default class Inventory {
 	choosing: number[] = [];
 	event = new AsyncEE();
-	private items: Array<Item | undefined>;
+	items: Array<Item | undefined>;
 
 	constructor(slots: number) {
 		this.items = new Array<undefined>(slots).fill(undefined);
