@@ -1,6 +1,7 @@
 import { Circle, SATVector } from 'detect-collisions';
 import { getStats } from '../stats.js';
 import Entity from './Entity.js';
+import Slow from '../effect/Slow.js';
 export default class Gunner extends Entity {
     stats = getStats('Gunner');
     _stats = getStats('Gunner');
@@ -17,6 +18,12 @@ export default class Gunner extends Entity {
                     this.stats.health = 0;
                 }
                 break;
+            case 'Bush':
+                if (!this.effects.get('slow-on-bush')) {
+                    this.addEffect('slow-on-bush', new Slow(0.5));
+                    console.log('addeed');
+                }
+                break;
             default:
                 break;
         }
@@ -25,6 +32,16 @@ export default class Gunner extends Entity {
         switch (other.constructor.name) {
             case 'Gunner':
                 this.body.setPosition(this.body.pos.x - (response.overlapV.x + response.overlapN.x) / 2, this.body.pos.y - (response.overlapV.y + response.overlapN.y) / 2);
+                break;
+            default:
+                break;
+        }
+    }
+    onCollisionExit(other, response) {
+        switch (other.constructor.name) {
+            case 'Bush':
+                this.removeEffect('slow-on-bush');
+                console.log('remove');
                 break;
             default:
                 break;

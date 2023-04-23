@@ -1,43 +1,49 @@
+export declare const baseStats: {
+    speed: number;
+    health: number;
+};
 export declare const stats: {
-    AIGunner: {
-        health: number;
-        speed: number;
-    };
     Bush: {
         radius: number;
+        speed: number;
+        health: number;
     };
     Gunner: {
-        health: number;
         speed: number;
+        health: number;
         radius: number;
     };
     Rock: {
-        radius: number;
         health: number;
+        radius: number;
+        speed: number;
     };
     Bullet: {
         radius: number;
+        speed: number;
+        health: number;
     };
 };
 export declare function getStats<T extends keyof typeof stats>(name: T): {
-    AIGunner: {
-        health: number;
-        speed: number;
-    };
     Bush: {
         radius: number;
+        speed: number;
+        health: number;
     };
     Gunner: {
-        health: number;
         speed: number;
+        health: number;
         radius: number;
     };
     Rock: {
-        radius: number;
         health: number;
+        radius: number;
+        speed: number;
     };
     Bullet: {
         radius: number;
+        speed: number;
+        health: number;
     };
 }[T];
 //# sourceMappingURL=stats.d.ts.map

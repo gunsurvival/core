@@ -6,9 +6,13 @@ import Entity from './Entity.js';
 export default class Bullet extends Entity {
     stats: {
         radius: number;
+        speed: number;
+        health: number;
     };
     _stats: {
         radius: number;
+        speed: number;
+        health: number;
     };
     body: Body;
     speed: number;

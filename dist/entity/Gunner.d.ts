@@ -8,18 +8,19 @@ export type StatsGunner = {
 };
 export default class Gunner extends Entity {
     stats: {
-        health: number;
         speed: number;
+        health: number;
         radius: number;
     };
     _stats: {
-        health: number;
         speed: number;
+        health: number;
         radius: number;
     };
     body: Body;
     constructor(pos?: SATVector);
     onCollisionEnter(other: Entity, response: Response): void;
     onCollisionStay(other: Entity, response: Response): void;
+    onCollisionExit(other: Entity, response: Response): void;
 }
 //# sourceMappingURL=Gunner.d.ts.map

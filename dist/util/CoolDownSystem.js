@@ -8,6 +8,9 @@ export default class CoolDownSystem {
     isCoolingDown(key = 'default') {
         return this.list.get(key) > 0;
     }
+    isReady(key = 'default') {
+        return !this.isCoolingDown(key);
+    }
     add(key, time) {
         this.list.set(key, time);
     }

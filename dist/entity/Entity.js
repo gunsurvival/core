@@ -1,28 +1,28 @@
+import structuredClone from '@ungap/structured-clone';
 import { SATVector } from 'detect-collisions';
 import { AsyncEE } from '../util/AsyncEE.js';
 import { safeId } from '../util/index.js';
-import structuredClone from '@ungap/structured-clone';
 export default class Entity {
     id = String(safeId());
     name = this.constructor.name;
     markAsRemove = false;
     elapsedTick = 0;
-    effects = new Array(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
+    effects = new Map(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
     event = new AsyncEE();
     vel = new SATVector(0, 0);
+    visibility;
     beforeUpdate(world, tickData) {
         this.elapsedTick++;
         this._stats = structuredClone(this.stats);
         // Iterate over effects and calculate them
         // if effect is done or marked as remove, remove it
-        // eslint-disable-next-line @typescript-eslint/prefer-for-of
-        for (let i = 0; i < this.effects.length; i++) {
-            if (this.effects[i].markAsRemove) {
-                this.removeEffect(this.effects[i]);
-                continue;
+        this.effects.forEach((effect, id) => {
+            if (effect.markAsRemove) {
+                this.removeEffect(id);
+                return;
             }
-            this.effects[i].calc(this, world, tickData);
-        }
+            effect.calc(this, world, tickData);
+        });
         this.body.pos.x += this.vel.x * tickData.delta;
         this.body.pos.y += this.vel.y * tickData.delta;
     }
@@ -50,16 +50,16 @@ export default class Entity {
     assign(initData) {
         Object.assign(this, initData);
     }
-    addEffect(effect) {
-        this.effects.push(effect);
+    addEffect(id, effect) {
+        this.effects.set(id, effect);
         this.event.emit('+effects', effect).catch(console.error);
     }
-    removeEffect(effect) {
-        const index = this.effects.indexOf(effect);
-        if (index === -1) {
+    removeEffect(id) {
+        const effect = this.effects.get(id);
+        if (!effect) {
             return;
         }
-        this.effects.splice(index, 1);
+        this.effects.delete(id);
         this.event.emit('-effects', effect).catch(console.error);
     }
 }

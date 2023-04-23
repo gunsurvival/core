@@ -9,6 +9,17 @@ export default class Rock extends Entity {
         super();
         this.body = new Circle(pos, this.stats.radius);
     }
+    update(world, tickData) {
+    }
+    onCollisionEnter(other, response) {
+        if (other.constructor.name === 'Bullet') {
+            this.stats.health -= other.speed / 5;
+            this.body.setScale(this.stats.health / 100);
+            if (this.stats.health <= 30) {
+                this.destroy();
+            }
+        }
+    }
     onCollisionStay(other, response) {
         other.body.setPosition(other.body.pos.x + response.overlapV.x + response.overlapN.x, other.body.pos.y + response.overlapV.y + response.overlapN.y);
     }

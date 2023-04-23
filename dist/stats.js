@@ -1,22 +1,26 @@
 import structuredClone from '@ungap/structured-clone';
+export const baseStats = {
+    speed: 0,
+    health: 0,
+};
 export const stats = {
-    AIGunner: {
-        health: 100,
-        speed: 5,
-    },
     Bush: {
+        ...baseStats,
         radius: 50,
     },
     Gunner: {
-        health: 100,
+        ...baseStats,
         speed: 4,
+        health: 100,
         radius: 40,
     },
     Rock: {
-        radius: 90,
+        ...baseStats,
         health: 100,
+        radius: 90,
     },
     Bullet: {
+        ...baseStats,
         radius: 10,
     },
 };

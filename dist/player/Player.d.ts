@@ -1,10 +1,14 @@
+import { AsyncEE } from './../util/AsyncEE.js';
 import type { ITickData } from '../types.js';
-import CoolDownSystem from '../util/CoolDownSystem.js';
 import type World from '../world/World.js';
 import type Entity from '../entity/Entity.js';
-export default abstract class Player<T extends Entity> {
+import Inventory from '../Inventory.js';
+export default abstract class Player<T extends Entity = Entity> {
+    isOnline: boolean;
     entity: T;
     fallbackSpeed: number;
+    event: AsyncEE;
+    inventory: Inventory;
     state: {
         keyboard: {
             w: boolean;
@@ -28,8 +32,11 @@ export default abstract class Player<T extends Entity> {
             right: boolean;
         };
     };
-    coolDownSystem: CoolDownSystem;
+    constructor(isOnline?: boolean);
+    get isReady(): boolean;
     playAs(entity: T): void;
+    bindEvents(entity: Entity): void;
+    unbindEvents(entity: Entity): void;
     update(world: World, tickData: ITickData): void;
 }
 //# sourceMappingURL=Player.d.ts.map
