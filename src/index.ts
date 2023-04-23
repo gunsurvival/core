@@ -18,6 +18,7 @@
 
 export * as Effect from './effect/index.js';
 export * as Entity from './entity/index.js';
+export * as Item from './item/index.js';
 export * as Player from './player/index.js';
 export * as World from './world/index.js';
 export * from './util/index.js';
