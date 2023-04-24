@@ -1,3 +1,4 @@
+import {SATVector} from 'detect-collisions';
 import {AsyncEE} from './../util/AsyncEE.js';
 import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
@@ -60,5 +61,18 @@ export default abstract class Player<T extends Entity = Entity> {
 
 	update(world: World, tickData: ITickData) {
 		this.inventory.update(tickData);
+	}
+
+	getSpeedV() {
+		return new SATVector(
+			this.state.keyboard.a ? -1 : this.state.keyboard.d ? 1 : 0,
+			this.state.keyboard.w ? -1 : this.state.keyboard.s ? 1 : 0,
+		).scale(
+			(1 / Math.sqrt(2)) * this.speed,
+		);
+	}
+
+	get speed() {
+		return (this.entity._stats as {speed: number}).speed || this.fallbackSpeed;
 	}
 }
