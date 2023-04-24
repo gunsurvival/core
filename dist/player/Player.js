@@ -1,3 +1,4 @@
+import { SATVector } from 'detect-collisions';
 import { AsyncEE } from './../util/AsyncEE.js';
 import Inventory from '../Inventory.js';
 export default class Player {
@@ -53,6 +54,12 @@ export default class Player {
     }
     update(world, tickData) {
         this.inventory.update(tickData);
+    }
+    getSpeedV() {
+        return new SATVector(this.state.keyboard.a ? -1 : this.state.keyboard.d ? 1 : 0, this.state.keyboard.w ? -1 : this.state.keyboard.s ? 1 : 0).scale((1 / Math.sqrt(2)) * this.speed);
+    }
+    get speed() {
+        return this.entity._stats.speed || this.fallbackSpeed;
     }
 }
 //# sourceMappingURL=Player.js.map

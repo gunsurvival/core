@@ -21,7 +21,6 @@ export default class Gunner extends Entity {
             case 'Bush':
                 if (!this.effects.get('slow-on-bush')) {
                     this.addEffect('slow-on-bush', new Slow(0.5));
-                    console.log('addeed');
                 }
                 break;
             default:
@@ -41,7 +40,6 @@ export default class Gunner extends Entity {
         switch (other.constructor.name) {
             case 'Bush':
                 this.removeEffect('slow-on-bush');
-                console.log('remove');
                 break;
             default:
                 break;

@@ -1,3 +1,5 @@
+/// <reference types="sat" resolution-mode="require"/>
+import { SATVector } from 'detect-collisions';
 import { AsyncEE } from './../util/AsyncEE.js';
 import type { ITickData } from '../types.js';
 import type World from '../world/World.js';
@@ -38,5 +40,7 @@ export default abstract class Player<T extends Entity = Entity> {
     bindEvents(entity: Entity): void;
     unbindEvents(entity: Entity): void;
     update(world: World, tickData: ITickData): void;
+    getSpeedV(): SATVector;
+    get speed(): number;
 }
 //# sourceMappingURL=Player.d.ts.map

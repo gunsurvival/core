@@ -1,5 +1,4 @@
 import Player from './Player.js';
-import { SATVector } from 'detect-collisions';
 import Ak47 from '../item/Ak47.js';
 export default class Casual extends Player {
     constructor(isOnline = false) {
@@ -30,10 +29,6 @@ export default class Casual extends Player {
         if (this.state.mouse.left && this.inventory.current.length > 0) {
             this.inventory.current[0]?.primaryAction(this, world, tickData);
         }
-    }
-    getSpeedV() {
-        const speed = this.entity._stats.speed || this.fallbackSpeed;
-        return new SATVector(this.state.keyboard.a ? -1 : this.state.keyboard.d ? 1 : 0, this.state.keyboard.w ? -1 : this.state.keyboard.s ? 1 : 0).scale((1 / Math.sqrt(2)) * speed);
     }
 }
 //# sourceMappingURL=Casual.js.map
