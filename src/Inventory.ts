@@ -1,14 +1,16 @@
+/* eslint-disable no-await-in-loop */
 import {type ITickData} from './types.js';
 import type Item from './item/Item.js';
 import {AsyncEE} from './util/AsyncEE.js';
+import None from './item/None.js';
 
 export default class Inventory {
 	choosing: number[] = [];
-	event = new AsyncEE();
-	items: Array<Item | undefined>;
+	event = new AsyncEE<InventoryEventMap>();
+	items: Item[];
 
 	constructor(slots: number) {
-		this.items = new Array<undefined>(slots).fill(undefined);
+		this.items = new Array<Item>(slots).fill(new None());
 	}
 
 	get current() {
@@ -55,14 +57,22 @@ export default class Inventory {
 
 	async addItem(item: Item) {
 		for (let i = 0; i < this.items.length; i++) {
-			if (this.items[i] === undefined) {
+			if (this.items[i] instanceof None) {
 				this.items[i] = item;
+				await this.event.emit('add', item, {
+					index: i,
+					isStack: false,
+				});
+				break;
 			} else if (this.items[i]!.canStackWith(item)) {
 				this.items[i]!.amount += item.amount;
+				await this.event.emit('add', item, {
+					index: i,
+					isStack: true,
+				});
+				break;
 			}
 		}
-
-		await this.event.emit('add', item);
 
 		if (this.choosing.length === 0) {
 			await this.choose(0);
@@ -86,3 +96,15 @@ export default class Inventory {
 		}
 	}
 }
+
+export type IEventAddOpts = {
+	index: number;
+	isStack: boolean;
+};
+
+type InventoryEventMap = {
+	choose: (indexes: number[]) => void;
+	swap: (index1: number, index2: number) => void;
+	add: (item: Item, opts: IEventAddOpts) => void;
+	remove: (item: Item) => void;
+};

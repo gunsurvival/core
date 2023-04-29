@@ -3,14 +3,15 @@ import type Bullet from './Bullet.js';
 import {getStats} from '../stats.js';
 import Entity from './Entity.js';
 import Slow from '../effect/Slow.js';
-
-export type StatsGunner = {
-	health: number;
-	speed: number;
-	radius: number;
-};
+import Inventory from '../Inventory.js';
+import {type ITickData} from '../types.js';
+import type World from '../world/World.js';
+import {type EntityEventMap} from './Entity.js';
+import {type AsyncEE} from '../index.js';
+import * as Item from '../item/index.js';
 
 export default class Gunner extends Entity {
+	declare event: AsyncEE<GunnerEventMap>;
 	stats = getStats('Gunner');
 	_stats = getStats('Gunner');
 	body: Body;
@@ -18,14 +19,20 @@ export default class Gunner extends Entity {
 	constructor(pos = new SATVector(0, 0)) {
 		super();
 		this.body = new Circle(pos, this.stats.radius);
+		this.inventory.addItem(new Item.Ak47()).catch(console.error);
+		this.inventory.addItem(new Item.Revolver()).catch(console.error);
+	}
+
+	update(world: World, tickData: ITickData): void {
+
 	}
 
 	onCollisionEnter(other: Entity, response: Response) {
 		switch (other.constructor.name) {
 			case 'Bullet':
-				this.stats.health -= (other as Bullet).speed;
-				if (this.stats.health <= 0) {
-					this.stats.health = 0;
+				this._stats.health -= (other as Bullet).speed;
+				if (this._stats.health <= 0) {
+					this._stats.health = 0;
 				}
 
 				break;
@@ -64,3 +71,7 @@ export default class Gunner extends Entity {
 		}
 	}
 }
+
+export type GunnerEventMap = EntityEventMap & {
+	shoot: () => void;
+};

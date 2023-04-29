@@ -15,7 +15,7 @@ export default abstract class World {
 	collisionHashMap = new Map<string, Response>();
 	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
-	event = new AsyncEE();
+	event = new AsyncEE<WorldEventMap>();
 
 	nextTick(tickData: ITickData) {
 		this.newCollisionHashMap.clear();
@@ -71,3 +71,10 @@ export default abstract class World {
 		entity.onRemove(this);
 	}
 }
+
+type WorldEventMap = {
+	'+entities': (entity: Entity) => void;
+	'-entities': (entity: Entity) => void;
+	'collision-enter': (a: Entity, b: Entity) => void;
+	'collision-exit': (a: Entity, b: Entity) => void;
+};

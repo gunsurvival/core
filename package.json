@@ -21,6 +21,7 @@
 	"author": "khoakomlem",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/events": "^3.0.0",
 		"@types/random": "^3.0.1",
 		"@types/ungap__structured-clone": "^0.3.0",
 		"@typescript-eslint/eslint-plugin": ">=5.43.0",
@@ -30,6 +31,7 @@
 		"eslint-config-xo-typescript": "^0.55.1",
 		"nodemon": "^2.0.20",
 		"semver": "^7.3.8",
+		"typed-emitter": "^2.1.0",
 		"typescript": ">=4.4"
 	},
 	"dependencies": {
@@ -37,6 +39,7 @@
 		"@ungap/structured-clone": "^1.0.2",
 		"await-to-js": "^3.0.0",
 		"detect-collisions": "^6.6.11",
+		"events": "^3.3.0",
 		"poly-decomp": "^0.3.0",
 		"random": "^4.1.0",
 		"sat": "^0.9.0",

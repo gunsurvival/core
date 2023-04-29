@@ -6,7 +6,7 @@ import type World from '../world/World.js';
 import Gun from './Gun.js';
 import {getStats} from '../stats.js';
 
-export default class Ak47 extends Gun {
-	stats = getStats('Ak47');
-	_stats = getStats('Ak47');
+export default class Revolver extends Gun {
+	stats = getStats('Revolver');
+	_stats = getStats('Revolver');
 }

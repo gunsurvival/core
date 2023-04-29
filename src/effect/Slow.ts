@@ -9,6 +9,6 @@ export default class Slow extends Effect {
 	}
 
 	calc(entity: Entity, world: World, tickData: ITickData): void {
-		entity._stats.speed *= this.strength;
+		entity.stats.speed *= this.strength;
 	}
 }

@@ -1,4 +1,4 @@
-import {type stats} from './../stats.js';
+import {getStats, type EntityStats} from './../stats.js';
 import {quickDecomp} from 'poly-decomp';
 import {computeViewport, type Vector2D} from 'visibility-polygon';
 import structuredClone from '@ungap/structured-clone';
@@ -7,7 +7,8 @@ import type {ITickData} from '../types.js';
 import {AsyncEE} from '../util/AsyncEE.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
-import {safeId} from '../util/index.js';
+import {safeId} from '../util/safeId.js';
+import Inventory from '../Inventory.js';
 
 export default abstract class Entity {
 	id = String(safeId());
@@ -15,17 +16,19 @@ export default abstract class Entity {
 	markAsRemove = false;
 	elapsedTick = 0;
 	effects = new Map<string, Effect>(); // Server state: This is not relate to physic so need to use custom mutate array to detect changes
-	event = new AsyncEE();
 	vel = new SATVector(0, 0);
 	visibility: Vector2D[];
+	event = new AsyncEE<EntityEventMap>();
+	inventory = new Inventory(4);
+	isStatic = false;
 
 	abstract body: Body; // Server state: This is relate to physic so no need to use custom mutate variable, changes auto assign it at end of update
-	abstract stats: typeof stats[keyof typeof stats]; // Redefine this in the child class. Base stats that are not affected by effects
-	abstract _stats: typeof stats[keyof typeof stats]; // Like above but this is used to calculate effects that have a duration
+	abstract stats: typeof EntityStats ; // Dynamic stats, this is used to calculate new stats with effects that have a duration
+	abstract _stats: typeof EntityStats; // Base stats, this is used to calculate dynamic stats, changed permanently
 
 	beforeUpdate(world: World, tickData: ITickData) {
 		this.elapsedTick++;
-		this._stats = structuredClone(this.stats);
+		this.stats = structuredClone(this._stats);
 		// Iterate over effects and calculate them
 		// if effect is done or marked as remove, remove it
 
@@ -40,6 +43,7 @@ export default abstract class Entity {
 
 		this.body.pos.x += this.vel.x * tickData.delta;
 		this.body.pos.y += this.vel.y * tickData.delta;
+		this.inventory.update(tickData);
 	}
 
 	afterUpdate(world: World, tickData: ITickData) {
@@ -94,3 +98,12 @@ export default abstract class Entity {
 		this.event.emit('-effects', effect).catch(console.error);
 	}
 }
+
+export type EntityEventMap = {
+	'+effects': (effect: Effect) => void;
+	'-effects': (effect: Effect) => void;
+
+	'collision-enter': (other: Entity) => void;
+	'collision-stay': (other: Entity) => void;
+	'collision-exit': (other: Entity) => void;
+};

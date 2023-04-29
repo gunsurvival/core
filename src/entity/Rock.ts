@@ -9,6 +9,7 @@ export default class Rock extends Entity {
 	stats = getStats('Rock');
 	_stats = getStats('Rock');
 	body: Body;
+	isStatic = true;
 
 	constructor(pos = new SATVector(0, 0)) {
 		super();
@@ -20,15 +21,19 @@ export default class Rock extends Entity {
 
 	onCollisionEnter(other: Entity, response: Response): void {
 		if (other.constructor.name === 'Bullet') {
-			this.stats.health -= (other as Bullet).speed / 5;
-			this.body.setScale(this.stats.health / 100);
-			if (this.stats.health <= 30) {
+			this._stats.health -= (other as Bullet).speed / 5;
+			this.body.setScale(this._stats.health / 100);
+			if (this._stats.health <= 30) {
 				this.destroy();
 			}
 		}
 	}
 
 	onCollisionStay(other: Entity, response: Response) {
+		if (other.isStatic) {
+			return;
+		}
+
 		other.body.setPosition(
 			other.body.pos.x + response.overlapV.x + response.overlapN.x,
 			other.body.pos.y + response.overlapV.y + response.overlapN.y,
