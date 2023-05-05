@@ -1,5 +1,5 @@
 import {System, type Body, type Response} from 'detect-collisions';
-import {AsyncEE} from '../util/AsyncEE.js';
+import WorldEvent from '../util/WorldEvent.js';
 import type Entity from '../entity/Entity.js';
 import {type ITickData} from '../types.js';
 import {genId} from '../util/index.js';
@@ -15,7 +15,29 @@ export default abstract class World {
 	collisionHashMap = new Map<string, Response>();
 	newCollisionHashMap = new Map<string, Response>();
 	physics = new System();
-	event = new AsyncEE<WorldEventMap>();
+	event = new WorldEvent<WorldEventMap>();
+
+	constructor() {
+		this.event.on('+entities', (entity: Entity) => {
+			this.add(entity);
+		});
+		this.event.on('-entities', (entity: Entity) => {
+			this.remove(entity);
+		});
+
+		this.event.on('collision-enter', (response: ResponseBodyRefEntity) => {
+			const uniq = genId(response.a.entityRef, response.b.entityRef);
+			this.collisionHashMap.set(uniq, response);
+			response.a.entityRef.onCollisionEnter(response.b.entityRef, response);
+			response.a.entityRef.event.emit('collision-enter', response.b.entityRef).catch(console.error);
+		});
+		this.event.on('collision-exit', (response: ResponseBodyRefEntity) => {
+			const uniq = genId(response.a.entityRef, response.b.entityRef);
+			this.collisionHashMap.delete(uniq);
+			response.a.entityRef.onCollisionExit(response.b.entityRef, response);
+			response.a.entityRef.event.emit('collision-exit', response.b.entityRef).catch(console.error);
+		});
+	}
 
 	nextTick(tickData: ITickData) {
 		this.newCollisionHashMap.clear();
@@ -36,10 +58,10 @@ export default abstract class World {
 				if (this.collisionHashMap.has(uniq)) {
 					entity.onCollisionStay(response.b.entityRef, response);
 				} else {
-					this.collisionHashMap.set(uniq, response);
-					entity.onCollisionEnter(response.b.entityRef, response);
-					this.event.emit('collision-enter', entity, response.b.entityRef).catch(console.error);
-					entity.event.emit('collision-enter', response.b.entityRef).catch(console.error);
+					// This.collisionHashMap.set(uniq, response);
+					// entity.onCollisionEnter(response.b.entityRef, response);
+					this.event.emit('collision-enter', response).catch(console.error);
+					// Entity.event.emit('collision-enter', response.b.entityRef).catch(console.error);
 				}
 			});
 
@@ -47,10 +69,10 @@ export default abstract class World {
 		});
 		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: string) => {
 			if (!this.newCollisionHashMap.has(uniq)) {
-				response.a.entityRef.onCollisionExit(response.b.entityRef, response);
-				this.collisionHashMap.delete(uniq);
-				this.event.emit('collision-exit', response.a.entityRef, response.b.entityRef).catch(console.error);
-				response.a.entityRef.event.emit('collision-exit', response.b.entityRef).catch(console.error);
+				// Response.a.entityRef.onCollisionExit(response.b.entityRef, response);
+				// this.collisionHashMap.delete(uniq);
+				this.event.emit('collision-exit', response).catch(console.error);
+				// Response.a.entityRef.event.emit('collision-exit', response.b.entityRef).catch(console.error);
 			}
 		});
 	}
@@ -60,14 +82,12 @@ export default abstract class World {
 		this.entities.set(entity.id, entity);
 		(entity as (Entity & {body: BodyRefEntity})).body.entityRef = entity;
 		// Need to reference the entity in the body because the body is passed to the System.checkOne callback not the entity
-		this.event.emit('+entities', entity).catch(console.error);
 		entity.onAdd(this);
 	}
 
 	remove(entity: Entity) {
 		this.physics.remove(entity.body);
 		this.entities.delete(entity.id);
-		this.event.emit('-entities', entity).catch(console.error);
 		entity.onRemove(this);
 	}
 }
@@ -75,6 +95,6 @@ export default abstract class World {
 type WorldEventMap = {
 	'+entities': (entity: Entity) => void;
 	'-entities': (entity: Entity) => void;
-	'collision-enter': (a: Entity, b: Entity) => void;
-	'collision-exit': (a: Entity, b: Entity) => void;
+	'collision-enter': (response: ResponseBodyRefEntity) => void;
+	'collision-exit': (response: ResponseBodyRefEntity) => void;
 };
