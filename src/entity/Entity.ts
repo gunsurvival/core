@@ -2,13 +2,18 @@ import {getStats, type EntityStats} from './../stats.js';
 import {quickDecomp} from 'poly-decomp';
 import {computeViewport, type Vector2D} from 'visibility-polygon';
 import structuredClone from '@ungap/structured-clone';
-import {type Body, type Response, SATVector} from 'detect-collisions';
+import {type Body, type Response, SATVector, Circle} from 'detect-collisions';
 import type {ITickData} from '../types.js';
 import {AsyncEE} from '../util/AsyncEE.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
 import {safeId} from '../util/safeId.js';
 import Inventory from '../Inventory.js';
+
+export type IEntity = {
+	id: string;
+
+};
 
 export default abstract class Entity {
 	id = String(safeId());
@@ -62,7 +67,7 @@ export default abstract class Entity {
 	onCollisionExit(other: Entity, response: Response) {}
 
 	init(data: Record<string, unknown>) {
-		const dataFormatted = data as {
+		const {id, scale, angle, pos, offset, vel} = data as {
 			id: string;
 			scale: number;
 			angle: number;
@@ -70,13 +75,30 @@ export default abstract class Entity {
 			offset: {x: number; y: number};
 			vel: {x: number; y: number};
 		};
-		this.id = dataFormatted.id;
-		this.body.setAngle(dataFormatted.angle);
-		this.body.setScale(dataFormatted.scale);
-		this.body.setPosition(dataFormatted.pos.x, dataFormatted.pos.y);
-		this.body.setOffset(new SATVector(dataFormatted.offset.x, dataFormatted.offset.y));
-		this.vel.x = dataFormatted.vel.x;
-		this.vel.y = dataFormatted.vel.y;
+		if (id) {
+			this.id = id;
+		}
+
+		if (angle) {
+			this.body.setAngle(angle);
+		}
+
+		if (scale) {
+			this.body.setScale(scale);
+		}
+
+		if (pos) {
+			this.body.setPosition(pos.x, pos.y);
+		}
+
+		if (offset) {
+			this.body.setOffset(new SATVector(offset.x, offset.y));
+		}
+
+		if (vel) {
+			this.vel.x = vel.x;
+			this.vel.y = vel.y;
+		}
 	}
 
 	assign(initData: Record<string, unknown>) {
@@ -103,7 +125,7 @@ export type EntityEventMap = {
 	'+effects': (effect: Effect) => void;
 	'-effects': (effect: Effect) => void;
 
-	'collision-enter': (other: Entity) => void;
-	'collision-stay': (other: Entity) => void;
-	'collision-exit': (other: Entity) => void;
+	'collision-enter': (entity: Entity) => void;
+	'collision-stay': (entity: Entity) => void;
+	'collision-exit': (entity: Entity) => void;
 };

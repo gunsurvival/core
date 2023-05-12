@@ -1,3 +1,4 @@
+
 import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
 import Player, {type PlayerEventMap} from './Player.js';

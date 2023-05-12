@@ -14,11 +14,10 @@ export default class Gunner extends Entity {
 	declare event: AsyncEE<GunnerEventMap>;
 	stats = getStats('Gunner');
 	_stats = getStats('Gunner');
-	body: Body;
+	body = new Circle(new SATVector(0, 0), this.stats.radius);
 
-	constructor(pos = new SATVector(0, 0)) {
+	constructor() {
 		super();
-		this.body = new Circle(pos, this.stats.radius);
 		this.inventory.addItem(new Item.Ak47()).catch(console.error);
 		this.inventory.addItem(new Item.Revolver()).catch(console.error);
 	}

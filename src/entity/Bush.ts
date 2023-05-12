@@ -5,13 +5,8 @@ import Entity from './Entity.js';
 export default class Bush extends Entity {
 	stats = getStats('Bush');
 	_stats = getStats('Bush');
-	body: Body;
 	isStatic = true;
-
-	constructor(pos = new SATVector(0, 0)) {
-		super();
-		this.body = new Circle(pos, this.stats.radius);
-	}
+	body = new Circle(new SATVector(0, 0), this.stats.radius);
 
 	onCollisionStay(other: Entity, response: SAT.Response): void {
 		this.body.setPosition(

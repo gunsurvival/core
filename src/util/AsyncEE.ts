@@ -1,30 +1,29 @@
 export class AsyncEE<Events extends EventsMap> {
-	private readonly listeners = new Map<string, DefaultHandler[]>();
+	private readonly eventHandlers = new Map<string, DefaultHandler[]>();
 
 	on<Ev extends EventNames<Events>>(event: Ev, handler: Events[Ev]) {
-		let listener = this.listeners.get(event);
-		if (!listener) {
-			listener = [];
-			this.listeners.set(event, listener);
-		}
-
-		listener.push(handler);
+		const eventHandlers = this.eventHandlers.get(event) ?? [];
+		eventHandlers.push(handler as DefaultHandler);
+		this.eventHandlers.set(event, eventHandlers);
 	}
 
 	remove<Ev extends EventNames<Events>>(event: Ev, handler: Events[Ev]) {
-		const listener = this.listeners.get(event);
-		if (!listener) {
+		const eventHandlers = this.eventHandlers.get(event);
+		if (!eventHandlers) {
 			return;
 		}
 
-		listener.splice(listener.indexOf(handler), 1);
-		if (listener.length === 0) {
-			this.listeners.delete(event);
+		const index = eventHandlers.indexOf(handler as DefaultHandler);
+		if (index !== -1) {
+			eventHandlers.splice(index, 1);
+			if (eventHandlers.length === 0) {
+				this.eventHandlers.delete(event);
+			}
 		}
 	}
 
 	once<Ev extends EventNames<Events>>(event: Ev, handler: Events[Ev]) {
-		const onceHandler = async (...args: EventParams<Events, Ev>) => {
+		const onceHandler = async (...args: Parameters<Events[Ev]>) => {
 			await handler(...args);
 			this.remove(event, onceHandler as Events[Ev]);
 		};
@@ -34,16 +33,25 @@ export class AsyncEE<Events extends EventsMap> {
 
 	async emit<Ev extends EventNames<Events>>(
 		event: Ev,
-		...args: EventParams<Events, Ev>
+		...args: Parameters<Events[Ev]>
 	) {
-		const listener = this.listeners.get(event);
-		if (listener) {
-			await Promise.allSettled(listener.map(async handler => handler(...args)));
+		const values: Array<ReturnType<Events[Ev]>> = [];
+		const eventHandlers = this.eventHandlers.get(event)?.slice();
+		if (eventHandlers?.length) {
+			for (const handler of eventHandlers) {
+				// eslint-disable-next-line no-await-in-loop
+				const value = (await handler(...args)) as ReturnType<Events[Ev]>;
+				if (value) {
+					values.push(value);
+				}
+			}
 		}
+
+		return values;
 	}
 }
 
-export type DefaultHandler = (...args: any[]) => Promise<void> | void;
+export type DefaultHandler = EventHandler<any[]>;
 
 /**
  * An events map is an interface that maps event names to their value, which
@@ -56,8 +64,6 @@ export type EventsMap = Record<string, DefaultHandler>;
  */
 export type EventNames<Map extends EventsMap> = keyof Map & string;
 
-/** The tuple type representing the parameters of an event listener */
-export type EventParams<
-	Map extends EventsMap,
-	Ev extends EventNames<Map>,
-> = Parameters<Map[Ev]>;
+/** The tuple type representing the handler of an event listener */
+export type EventHandler<Params extends any[]> = (...args: Params) => unknown;
+

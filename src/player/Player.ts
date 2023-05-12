@@ -1,3 +1,4 @@
+
 import {SATVector} from 'detect-collisions';
 import {AsyncEE} from './../util/AsyncEE.js';
 import type {ITickData} from '../types.js';

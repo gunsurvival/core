@@ -8,13 +8,8 @@ import type World from '../world/World.js';
 export default class Rock extends Entity {
 	stats = getStats('Rock');
 	_stats = getStats('Rock');
-	body: Body;
+	body = new Circle(new SATVector(0, 0), this.stats.radius);
 	isStatic = true;
-
-	constructor(pos = new SATVector(0, 0)) {
-		super();
-		this.body = new Circle(pos, this.stats.radius);
-	}
 
 	update(world: World, tickData: ITickData): void {
 	}

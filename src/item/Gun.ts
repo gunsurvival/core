@@ -31,11 +31,13 @@ export default abstract class Gun extends Item {
 		if (!player.isOnline) {
 			// Only create bullet if playing locally (offline)
 			const tolerance = random.normal(0, Math.PI / (this.stats.tolerance / (1 + player.getSpeedV().len())));
-			const bullet = new Bullet(new SATVector(
-				player.entity.body.pos.x + Math.cos(player.entity.body.angle) * 60,
-				player.entity.body.pos.y + Math.sin(player.entity.body.angle) * 60,
-			), player.entity.body.angle + Number(tolerance()), this.stats.size);
-			world.add(bullet);
+			await world.api('api:+entities', 'Bullet', {
+				pos: {
+					x: player.entity.body.pos.x + Math.cos(player.entity.body.angle) * 60,
+					y: player.entity.body.pos.y + Math.sin(player.entity.body.angle) * 60,
+				},
+				angle: player.entity.body.angle + Number(tolerance()),
+			});
 		}
 	}
 }

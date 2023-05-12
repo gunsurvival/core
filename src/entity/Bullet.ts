@@ -7,15 +7,8 @@ import Entity from './Entity.js';
 export default class Bullet extends Entity {
 	stats = getStats('Bullet');
 	_stats = getStats('Bullet');
-	body: Body;
-	speed: number;
-
-	constructor(pos = new SATVector(0, 0), angle = 0, speed = 0) {
-		super();
-		this.body = new Circle(pos, this.stats.radius);
-		this.body.angle = angle;
-		this.speed = speed;
-	}
+	body = new Circle(new SATVector(0, 0), this.stats.radius);
+	speed = 0;
 
 	update(world: World, tickData: ITickData): void {
 		this.vel.x = Math.cos(this.body.angle) * this.speed;
