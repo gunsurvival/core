@@ -4,7 +4,7 @@ import {safeId} from '../util/safeId.js';
 import type Entity from '../entity/Entity.js';
 
 export default abstract class Effect {
-	id: number = safeId();
+	id: string = safeId();
 	markAsRemove = false;
 
 	destroy() {

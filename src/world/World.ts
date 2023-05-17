@@ -3,7 +3,7 @@ import * as Entity from '../entity/index.js';
 import {type ITickData} from '../types.js';
 import {AsyncEE, genId} from '../util/index.js';
 
-type BodyRefEntity = Body & {id: string};
+type BodyRefEntity = Body & {entitiyRef: Entity.default};
 type ResponseBodyRefEntity = Omit<Response, 'a' | 'b'> & {
 	a: BodyRefEntity;
 	b: BodyRefEntity;
@@ -41,8 +41,8 @@ export default abstract class World {
 			this.physics.updateBody(entity.body);
 
 			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
-				const entityA = this.entities.get(response.a.id);
-				const entityB = this.entities.get(response.b.id);
+				const entityA = response.a.entitiyRef;
+				const entityB = response.b.entitiyRef;
 
 				if (entityA && entityB) {
 					const uniq = genId(entityA, entityB);
@@ -50,10 +50,10 @@ export default abstract class World {
 					if (this.collisionHashMap.has(uniq)) {
 						entity.onCollisionStay(entityB, response);
 					} else {
-						// This.collisionHashMap.set(uniq, response);
-						// entity.onCollisionEnter(response.b.entityRef, response);
-						this.api('api:collision-enter', response).catch(console.error);
-						// Entity.event.emit('collision-enter', response.b.entityRef).catch(console.error);
+						console.log('collision-enter', entityA.name, entityB.name);
+						this.collisionHashMap.set(uniq, response);
+						entityA.onCollisionEnter(entityB, response);
+						entityA.event.emit('collision-enter', entityB).catch(console.error);
 					}
 				}
 			});
@@ -62,10 +62,16 @@ export default abstract class World {
 		});
 		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: string) => {
 			if (!this.newCollisionHashMap.has(uniq)) {
-				// Response.a.entityRef.onCollisionExit(response.b.entityRef, response);
-				// this.collisionHashMap.delete(uniq);
-				this.api('api:collision-exit', response).catch(console.error);
-				// Response.a.entityRef.event.emit('collision-exit', response.b.entityRef).catch(console.error);
+				const entityA = response.a.entitiyRef;
+				const entityB = response.b.entitiyRef;
+				if (entityA && entityB) {
+					const uniq = genId(entityA, entityB);
+					console.log('collision-exit', entityA.name, entityB.name);
+
+					this.collisionHashMap.delete(uniq);
+					entityA.onCollisionExit(entityB, response);
+					entityA.event.emit('collision-exit', entityB).catch(console.error);
+				}
 			}
 		});
 	}
@@ -89,33 +95,12 @@ export default abstract class World {
 				this.remove(entity);
 			}
 		});
-
-		this.event.on('api:collision-enter', response => {
-			const entityA = this.entities.get(response.a.id);
-			const entityB = this.entities.get(response.b.id);
-			if (entityA && entityB) {
-				const uniq = genId(entityA, entityB);
-				this.collisionHashMap.set(uniq, response);
-				entityA.onCollisionEnter(entityB, response);
-				entityA.event.emit('collision-enter', entityB).catch(console.error);
-			}
-		});
-		this.event.on('api:collision-exit', response => {
-			const entityA = this.entities.get(response.a.id);
-			const entityB = this.entities.get(response.b.id);
-			if (entityA && entityB) {
-				const uniq = genId(entityA, entityB);
-				this.collisionHashMap.delete(uniq);
-				entityA.onCollisionExit(entityB, response);
-				entityA.event.emit('collision-exit', entityB).catch(console.error);
-			}
-		});
 	}
 
 	add(entity: Entity.default) {
 		this.physics.insert(entity.body);
 		this.entities.set(entity.id, entity);
-		(entity as (Entity.default & {body: BodyRefEntity})).id = entity.id;
+		(entity as (Entity.default & {body: BodyRefEntity})).body.entitiyRef = entity;
 		// Need to reference the entity's id in the body because the body is passed to the System.checkOne callback, not the entity
 		entity.onAdd(this);
 		this.event.emit('+entities', entity).catch(console.error);
@@ -144,8 +129,6 @@ export default abstract class World {
 export type WorldEventMap = {
 	'api:+entities': (className: string, initial: Record<string, unknown>) => Entity.default;
 	'api:-entities': (id: string) => void;
-	'api:collision-enter': (response: ResponseBodyRefEntity) => void;
-	'api:collision-exit': (response: ResponseBodyRefEntity) => void;
 	'+entities': (entity: Entity.default) => void;
 	'-entities': (entity: Entity.default) => void;
 	'+events': (event: IEvent) => void;

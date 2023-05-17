@@ -7,11 +7,4 @@ export default class Bush extends Entity {
 	_stats = getStats('Bush');
 	isStatic = true;
 	body = new Circle(new SATVector(0, 0), this.stats.radius);
-
-	onCollisionStay(other: Entity, response: SAT.Response): void {
-		this.body.setPosition(
-			this.body.pos.x - response.overlapV.x,
-			this.body.pos.y - response.overlapV.y,
-		);
-	}
 }

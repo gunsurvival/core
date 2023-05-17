@@ -8,6 +8,7 @@ import Item from './Item.js';
 import {type GunStats} from '../stats.js';
 import type Gunner from '../entity/Gunner.js';
 import type PlayerCasual from '../player/Casual.js';
+import {safeId} from '../index.js';
 
 export default abstract class Gun extends Item {
 	coolDownSystem = new CoolDownSystem();
@@ -32,11 +33,13 @@ export default abstract class Gun extends Item {
 			// Only create bullet if playing locally (offline)
 			const tolerance = random.normal(0, Math.PI / (this.stats.tolerance / (1 + player.getSpeedV().len())));
 			await world.api('api:+entities', 'Bullet', {
+				id: safeId(),
 				pos: {
 					x: player.entity.body.pos.x + Math.cos(player.entity.body.angle) * 60,
 					y: player.entity.body.pos.y + Math.sin(player.entity.body.angle) * 60,
 				},
 				angle: player.entity.body.angle + Number(tolerance()),
+				speed: 30,
 			});
 		}
 	}

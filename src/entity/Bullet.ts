@@ -34,6 +34,6 @@ export default class Bullet extends Entity {
 
 	init(data: {speed: number}) {
 		super.init(data);
-		this.speed = data.speed;
+		this.speed = data.speed ?? 0;
 	}
 }
