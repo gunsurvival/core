@@ -32,7 +32,7 @@ export default abstract class World {
 
 		this.entities.forEach((entity: Entity.default, id) => {
 			if (entity.markAsRemove) {
-				this.remove(entity);
+				this.api('api:-entities', id).catch(console.error);
 				return;
 			}
 
