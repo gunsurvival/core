@@ -5,8 +5,8 @@ import type World from '../world/World.js';
 import {type ITickData} from '../types.js';
 import Mob from './Mob.js';
 
-export default class Wolf extends Mob {
-	stats = getStats('Wolf');
-	_stats = getStats('Wolf');
+export default class Spider extends Mob {
+	stats = getStats('Spider');
+	_stats = getStats('Spider');
 	body = new Circle(new SATVector(0, 0), this.stats.radius);
 }

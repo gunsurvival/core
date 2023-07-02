@@ -54,6 +54,26 @@ export const stats = {
 		tolerance: 128,
 		size: 30,
 	},
+
+	// Mob
+	Mob: {
+		...EntityStats,
+		speed: 1,
+		health: 100,
+		radius: 80,
+	},
+	Wolf: {
+		...EntityStats,
+		speed: 1.5,
+		health: 100,
+		radius: 70,
+	},
+	Spider: {
+		...EntityStats,
+		speed: 1.7,
+		health: 100,
+		radius: 70,
+	},
 };
 
 export function getStats<T extends keyof typeof stats>(name: T) {
