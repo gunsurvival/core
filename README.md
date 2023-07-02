@@ -1,71 +1,137 @@
-client: skip ticks & xai lerp
+<!-- PROJECT SHIELDS -->
 
-double t = 0.0;
-double dt = 0.01;
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
 
-    double currentTime = hires_time_in_seconds();
-    double accumulator = 0.0;
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fgunsurvival%2Fcore%2F&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Visitors&edge_flat=true)](https://hits.seeyoufarm.com)
+[Forks][forks-url]
+[Stargazers][stars-url]
+[MIT License][license-url]
 
-    State previous;
-    State current;
+<!-- PROJECT LOGO -->
 
-    while ( !quit )
-    {
-        double newTime = time();
-        double frameTime = newTime - currentTime;
-        if ( frameTime > 0.25 )
-            frameTime = 0.25;
-        currentTime = newTime;
+<br />
+<div align="center">
+  <a href="https://github.com/gunsurvival/">
+    <img src="https://avatars.githubusercontent.com/u/79581117" alt="Logo" width="80" >
+  </a>
+  <h3 align="center">GUNSURVIVAL CORE</h3>
 
-    accumulator += frameTime;
+<p align="center">
+	Core engine for Gunsurvival
+    <br />
+    <br />
+    <a href="https://khoakomlem.github.io/simple-flappybird/public/">Play Demo</a>
+    ·
+    <a href="https://github.com/gunsurvival/core/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/gunsurvival/core/issues">Request Feature</a>
+  </p>
+</div>
 
-    while ( accumulator >= dt )
-        {
-            previousState = currentState;
-            integrate( currentState, t, dt );
-            t += dt;
-            accumulator -= dt;
-        }
+<!-- TABLE OF CONTENTS -->
 
-    const double alpha = accumulator / dt;
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-    State state = currentState * alpha +
-            previousState * ( 1.0 - alpha );
+<!-- ABOUT THE PROJECT -->
 
-    render( state );
-    }
+## About The Project
 
-server: sync ticks, neu behind qua nhieu ticks thi skip het
-double t = 0.0;
-double dt = 1 / 60.0;
+<img src="https://i.imgur.com/ZQEcSXZ.png" alt="Logo">
 
-    double currentTime = hires_time_in_seconds();
+**Gunsurvival Core** is the core of Gunsurvival, which **Gunsurvival Server** and **Gunsurvival Client** will run base on it
 
-    while ( !quit )
-    {
-        double newTime = hires_time_in_seconds();
-        double frameTime = newTime - currentTime;
-        currentTime = newTime;
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-    while ( frameTime > 0.0 )
-        {
-            float deltaTime = min( frameTime, dt );
-            integrate( state, t, deltaTime );
-            frameTime -= deltaTime;
-            t += deltaTime;
-        }
+<!-- GETTING STARTED -->
 
-    render( state );
-    }
+## Getting Started
 
-MỖI entity có các thuộc tính của riêng và define = decorator @type, thay vì refefine lại hết SATBody
+To get a local build, copy up and running follow these simple example steps.
 
-entity: Mỗi Entity sẽ export + stats + Entity itself
+### Prerequisites
 
-entity server: Schema lại 2 cái trên
+- Install [node.js](https://nodejs.org/)
 
----
+### Installation
 
-Khi xử lí va chạm mà có thay đổi giá trị của position, hoặc các giá trị khác có thay đổi khả năng va chạm giữa chúng (thay đổi mà cả 2 ko còn choảng nhau nữa) thì other có thể ko nhận đc event onCollisionEnter
+1. Clone the repo
+   ```sh
+   git clone https://github.com/gunsurvival/core.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+3. Build the core
+   ```sh
+    npm run watch
+   ```
 
-![1678893351577](image/note/1678893351577.png)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
+
+## Contact
+
+Đậu Văn Đăng Khoa - [fb.com/khoakomlem](https://www.facebook.com/amongusslayersus) - khoakomlem@gmail.com
+
+Project Link: [https://github.com/gunsurvival/core](https://github.com/gunsurvival/core)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
+
+## Acknowledgments
+
+- [Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/)
+- [detect-collisions](https://www.npmjs.com/package/detect-collisions)
+- [How to make your game run at 60fps](https://medium0.com/@tglaiel/how-to-make-your-game-run-at-60fps-24c61210fe75)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[forks-shield]: https://img.shields.io/github/forks/gunsurvival/core.svg?style=for-the-badge
+[forks-url]: https://github.com/gunsurvival/core/network/members
+[stars-shield]: https://img.shields.io/github/stars/gunsurvival/core.svg?style=for-the-badge
+[stars-url]: https://github.com/gunsurvival/core/stargazers
+[issues-shield]: https://img.shields.io/github/issues/gunsurvival/core.svg?style=for-the-badge
+[issues-url]: https://github.com/gunsurvival/core/issues
+[license-shield]: https://img.shields.io/github/license/gunsurvival/core.svg?style=for-the-badge
+[license-url]: https://github.com/gunsurvival/core/blob/master/LICENSE.txt
