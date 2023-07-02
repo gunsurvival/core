@@ -25,10 +25,6 @@ export default class Rock extends Entity {
 	}
 
 	onCollisionStay(other: Entity, response: Response) {
-		if (other.isStatic) {
-			return;
-		}
-
 		other.body.setPosition(
 			other.body.pos.x + response.overlapV.x + response.overlapN.x,
 			other.body.pos.y + response.overlapV.y + response.overlapN.y,
