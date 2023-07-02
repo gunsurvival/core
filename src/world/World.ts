@@ -22,6 +22,7 @@ export default abstract class World {
 	event = new AsyncEE<WorldEventMap>();
 	events = new Array<IEvent>();
 	lockApi = false;
+	isOnline = false;
 
 	constructor() {
 		this.setupEvents();
@@ -45,12 +46,16 @@ export default abstract class World {
 				const entityB = response.b.entitiyRef;
 
 				if (entityA && entityB) {
+					if (entityA.isStatic && entityB.isStatic) {
+						// If current both entities are static, skip collision check
+						return;
+					}
+
 					const uniq = genId(entityA, entityB);
 					this.newCollisionHashMap.set(uniq, response);
 					if (this.collisionHashMap.has(uniq)) {
 						entity.onCollisionStay(entityB, response);
 					} else {
-						// Console.log('collision-enter', entityA.name, entityB.name);
 						this.collisionHashMap.set(uniq, response);
 						entityA.onCollisionEnter(entityB, response);
 						entityA.event.emit('collision-enter', entityB).catch(console.error);
@@ -66,8 +71,6 @@ export default abstract class World {
 				const entityB = response.b.entitiyRef;
 				if (entityA && entityB) {
 					const uniq = genId(entityA, entityB);
-					// Console.log('collision-exit', entityA.name, entityB.name);
-
 					this.collisionHashMap.delete(uniq);
 					entityA.onCollisionExit(entityB, response);
 					entityA.event.emit('collision-exit', entityB).catch(console.error);
