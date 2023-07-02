@@ -50,7 +50,7 @@ export default abstract class World {
 					if (this.collisionHashMap.has(uniq)) {
 						entity.onCollisionStay(entityB, response);
 					} else {
-						console.log('collision-enter', entityA.name, entityB.name);
+						// Console.log('collision-enter', entityA.name, entityB.name);
 						this.collisionHashMap.set(uniq, response);
 						entityA.onCollisionEnter(entityB, response);
 						entityA.event.emit('collision-enter', entityB).catch(console.error);
@@ -66,7 +66,7 @@ export default abstract class World {
 				const entityB = response.b.entitiyRef;
 				if (entityA && entityB) {
 					const uniq = genId(entityA, entityB);
-					console.log('collision-exit', entityA.name, entityB.name);
+					// Console.log('collision-exit', entityA.name, entityB.name);
 
 					this.collisionHashMap.delete(uniq);
 					entityA.onCollisionExit(entityB, response);
@@ -77,8 +77,9 @@ export default abstract class World {
 	}
 
 	setupEvents() {
+		// Event start with api: are emitted from outside (server, client, etc.)
+
 		this.event.on('api:+entities', (className, initial) => {
-			// Redefine this if constructor Entity.js is changed
 			if (!(className in Entity)) {
 				throw new Error(`Entity ${className} does not exist`);
 			}
@@ -92,6 +93,7 @@ export default abstract class World {
 		this.event.on('api:-entities', id => {
 			const entity = this.entities.get(id);
 			if (entity) {
+				console.log(id);
 				this.remove(entity);
 			}
 		});
