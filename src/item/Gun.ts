@@ -24,16 +24,18 @@ export default abstract class Gun extends Item {
 		if (this.coolDownSystem.isReady('primary')) {
 			this.coolDownSystem.add('primary', this.stats.autoCD);
 			await this.fire(player, world, tickData);
-			player.entity.event.emit('shoot').catch(console.error);
+			player.event.emit('shoot').catch(console.error);
 		}
 	}
 
 	async fire(player: PlayerCasual, world: World, tickData: ITickData) {
-		if (!player.isOnline) {
-			// Only create bullet if playing locally (offline)
-			const tolerance = random.normal(0, Math.PI / (this.stats.tolerance / (1 + player.getSpeedV().len())));
+		if (!world.isOnline) {
+			// Only create bullet if playing locally (to ignore two bullets being created from server & client)
+			const tolerance = random.normal(0, Math.PI / (this.stats.tolerance / (1 + player.entity.vel.len())));
+			console.log(player.entity.vel.len());
 			await world.api('api:+entities', 'Bullet', {
 				id: safeId(),
+				ownerId: player.entity.id,
 				pos: {
 					x: player.entity.body.pos.x + Math.cos(player.entity.body.angle) * 60,
 					y: player.entity.body.pos.y + Math.sin(player.entity.body.angle) * 60,

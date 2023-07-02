@@ -34,10 +34,6 @@ export default class Casual<T extends Entity = Entity> extends Player<T> {
 		},
 	};
 
-	constructor(isOnline = false) {
-		super(isOnline);
-	}
-
 	update(world: World, tickData: ITickData) {
 		super.update(world, tickData);
 		if (this.state.mouse.left && this.entity.inventory.current.length > 0) {

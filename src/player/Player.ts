@@ -10,8 +10,6 @@ export default abstract class Player<T extends Entity = Entity> {
 	event = new AsyncEE<PlayerEventMap>();
 	state = {};
 
-	constructor(public isOnline = false) {}
-
 	get isReady() {
 		return Boolean(this.entity);
 	}
