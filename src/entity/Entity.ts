@@ -1,19 +1,14 @@
-import {getStats, type EntityStats} from './../stats.js';
+import structuredClone from '@ungap/structured-clone';
 import {quickDecomp} from 'poly-decomp';
 import {computeViewport, type Vector2D} from 'visibility-polygon';
-import structuredClone from '@ungap/structured-clone';
-import {type Body, type Response, SATVector, Circle} from 'detect-collisions';
+import {type Body, type Response, SATVector} from 'detect-collisions';
+import type {EntityStats} from './../stats.js';
 import type {ITickData} from '../types.js';
 import {AsyncEE} from '../util/AsyncEE.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
 import {safeId} from '../util/safeId.js';
 import Inventory from '../Inventory.js';
-
-export type IEntity = {
-	id: string;
-
-};
 
 export default abstract class Entity {
 	id = String(safeId());
@@ -25,7 +20,7 @@ export default abstract class Entity {
 	visibility: Vector2D[];
 	event = new AsyncEE<EntityEventMap>();
 	inventory = new Inventory(4);
-	isStatic = false;
+	isStatic = false; // Skip collision check
 
 	abstract body: Body; // Server state: This is relate to physic so no need to use custom mutate variable, changes auto assign it at end of update
 	abstract stats: typeof EntityStats ; // Dynamic stats, this is used to calculate new stats with effects that have a duration
