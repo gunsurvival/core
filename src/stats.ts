@@ -14,6 +14,13 @@ export const GunStats = {
 	size: 30,
 };
 
+export const MobStats = {
+	...EntityStats,
+	speed: 1,
+	health: 100,
+	radius: 80,
+};
+
 export const stats = {
 	// Entity
 	Bush: {
@@ -56,20 +63,14 @@ export const stats = {
 	},
 
 	// Mob
-	Mob: {
-		...EntityStats,
-		speed: 1,
-		health: 100,
-		radius: 80,
-	},
 	Wolf: {
-		...EntityStats,
+		...MobStats,
 		speed: 1.5,
 		health: 100,
 		radius: 70,
 	},
 	Spider: {
-		...EntityStats,
+		...MobStats,
 		speed: 1.7,
 		health: 100,
 		radius: 70,
