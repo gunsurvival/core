@@ -1,31 +1,43 @@
 export class AsyncEE {
-    listeners = new Map();
+    eventHandlers = new Map();
     on(event, handler) {
-        let listener = this.listeners.get(event);
-        if (!listener) {
-            listener = [];
-            this.listeners.set(event, listener);
-        }
-        listener.push(handler);
+        const eventHandlers = this.eventHandlers.get(event) ?? [];
+        eventHandlers.push(handler);
+        this.eventHandlers.set(event, eventHandlers);
     }
     remove(event, handler) {
-        const listener = this.listeners.get(event);
-        if (!listener) {
+        const eventHandlers = this.eventHandlers.get(event);
+        if (!eventHandlers) {
             return;
         }
-        listener.splice(listener.indexOf(handler), 1);
+        const index = eventHandlers.indexOf(handler);
+        if (index !== -1) {
+            eventHandlers.splice(index, 1);
+            if (eventHandlers.length === 0) {
+                this.eventHandlers.delete(event);
+            }
+        }
     }
     once(event, handler) {
-        this.on(event, async (...args) => {
-            this.remove(event, handler);
+        const onceHandler = async (...args) => {
             await handler(...args);
-        });
+            this.remove(event, onceHandler);
+        };
+        this.on(event, onceHandler);
     }
     async emit(event, ...args) {
-        const listener = this.listeners.get(event);
-        if (listener) {
-            await Promise.allSettled(listener.map(async (handler) => handler(...args)));
+        const values = [];
+        const eventHandlers = this.eventHandlers.get(event)?.slice();
+        if (eventHandlers?.length) {
+            for (const handler of eventHandlers) {
+                // eslint-disable-next-line no-await-in-loop
+                const value = (await handler(...args));
+                if (value) {
+                    values.push(value);
+                }
+            }
         }
+        return values;
     }
 }
 //# sourceMappingURL=AsyncEE.js.map

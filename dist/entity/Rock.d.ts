@@ -1,5 +1,5 @@
 /// <reference types="sat" resolution-mode="require"/>
-import { type Response, SATVector, type Body } from 'detect-collisions';
+import { type Response, Circle } from 'detect-collisions';
 import Entity from './Entity.js';
 import { type ITickData } from '../types.js';
 import type World from '../world/World.js';
@@ -14,8 +14,8 @@ export default class Rock extends Entity {
         radius: number;
         speed: number;
     };
-    body: Body;
-    constructor(pos?: SATVector);
+    body: Circle;
+    isStatic: boolean;
     update(world: World, tickData: ITickData): void;
     onCollisionEnter(other: Entity, response: Response): void;
     onCollisionStay(other: Entity, response: Response): void;

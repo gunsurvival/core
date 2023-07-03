@@ -6,7 +6,7 @@ export default class Slow extends Effect {
         this.strength = strength;
     }
     calc(entity, world, tickData) {
-        entity._stats.speed *= this.strength;
+        entity.stats.speed *= this.strength;
     }
 }
 //# sourceMappingURL=Slow.js.map

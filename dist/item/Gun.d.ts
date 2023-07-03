@@ -1,14 +1,16 @@
-import type Player from '../player/Player.js';
 import CoolDownSystem from '../util/CoolDownSystem.js';
 import type World from '../world/World.js';
 import type { ITickData } from '../types.js';
 import Item from './Item.js';
-export default class Gun extends Item {
-    coolDownPrimary: number;
+import { type GunStats } from '../stats.js';
+import type Gunner from '../entity/Gunner.js';
+import type PlayerCasual from '../player/Casual.js';
+export default abstract class Gun extends Item {
     coolDownSystem: CoolDownSystem;
-    constructor(coolDownPrimary: number);
+    abstract stats: typeof GunStats;
+    abstract _stats: typeof GunStats;
     update(tickData: ITickData): void;
-    primaryAction(player: Player, world: World, tickData: ITickData): void;
-    fire(player: Player, world: World, tickData: ITickData): void;
+    primaryAction(player: PlayerCasual<Gunner>, world: World, tickData: ITickData): Promise<void>;
+    fire(player: PlayerCasual, world: World, tickData: ITickData): Promise<void>;
 }
 //# sourceMappingURL=Gun.d.ts.map

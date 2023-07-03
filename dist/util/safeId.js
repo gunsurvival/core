@@ -1,5 +1,5 @@
 let index = 0;
 export function safeId() {
-    return ++index;
+    return String(++index);
 }
 //# sourceMappingURL=safeId.js.map

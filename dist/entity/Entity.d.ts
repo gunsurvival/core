@@ -1,23 +1,26 @@
 /// <reference types="sat" resolution-mode="require"/>
-import { type stats } from './../stats.js';
 import { type Vector2D } from 'visibility-polygon';
 import { type Body, type Response, SATVector } from 'detect-collisions';
+import type { EntityStats } from './../stats.js';
 import type { ITickData } from '../types.js';
 import { AsyncEE } from '../util/AsyncEE.js';
 import type Effect from '../effect/Effect.js';
 import type World from '../world/World.js';
+import Inventory from '../Inventory.js';
 export default abstract class Entity {
     id: string;
     name: string;
     markAsRemove: boolean;
     elapsedTick: number;
     effects: Map<string, Effect>;
-    event: AsyncEE;
     vel: SATVector;
     visibility: Vector2D[];
+    event: AsyncEE<EntityEventMap>;
+    inventory: Inventory;
+    isStatic: boolean;
     abstract body: Body;
-    abstract stats: typeof stats[keyof typeof stats];
-    abstract _stats: typeof stats[keyof typeof stats];
+    abstract stats: typeof EntityStats;
+    abstract _stats: typeof EntityStats;
     beforeUpdate(world: World, tickData: ITickData): void;
     afterUpdate(world: World, tickData: ITickData): void;
     destroy(): void;
@@ -32,4 +35,11 @@ export default abstract class Entity {
     addEffect(id: string, effect: Effect): void;
     removeEffect(id: string): void;
 }
+export type EntityEventMap = {
+    '+effects': (effect: Effect) => void;
+    '-effects': (effect: Effect) => void;
+    'collision-enter': (entity: Entity) => void;
+    'collision-stay': (entity: Entity) => void;
+    'collision-exit': (entity: Entity) => void;
+};
 //# sourceMappingURL=Entity.d.ts.map

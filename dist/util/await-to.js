@@ -5,10 +5,7 @@ export async function to(promise, errorExt) {
     }
     catch (err) {
         if (errorExt) {
-            return [
-                { ...err, ...errorExt },
-                undefined,
-            ];
+            return [{ ...err, ...errorExt }, undefined];
         }
         return [err, undefined];
     }

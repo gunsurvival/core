@@ -1,10 +1,11 @@
 import { AsyncEE } from './util/AsyncEE.js';
+import None from './item/None.js';
 export default class Inventory {
     choosing = [];
     event = new AsyncEE();
     items;
     constructor(slots) {
-        this.items = new Array(slots).fill(undefined);
+        this.items = new Array(slots).fill(new None());
     }
     get current() {
         return this.choosing.map(index => this.items[index]);
@@ -42,14 +43,23 @@ export default class Inventory {
     }
     async addItem(item) {
         for (let i = 0; i < this.items.length; i++) {
-            if (this.items[i] === undefined) {
+            if (this.items[i] instanceof None) {
                 this.items[i] = item;
+                await this.event.emit('add', item, {
+                    index: i,
+                    isStack: false,
+                });
+                break;
             }
             else if (this.items[i].canStackWith(item)) {
                 this.items[i].amount += item.amount;
+                await this.event.emit('add', item, {
+                    index: i,
+                    isStack: true,
+                });
+                break;
             }
         }
-        await this.event.emit('add', item);
         if (this.choosing.length === 0) {
             await this.choose(0);
         }

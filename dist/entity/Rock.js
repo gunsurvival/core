@@ -4,18 +4,14 @@ import { getStats } from '../stats.js';
 export default class Rock extends Entity {
     stats = getStats('Rock');
     _stats = getStats('Rock');
-    body;
-    constructor(pos = new SATVector(0, 0)) {
-        super();
-        this.body = new Circle(pos, this.stats.radius);
-    }
-    update(world, tickData) {
-    }
+    body = new Circle(new SATVector(0, 0), this.stats.radius);
+    isStatic = true;
+    update(world, tickData) { }
     onCollisionEnter(other, response) {
         if (other.constructor.name === 'Bullet') {
-            this.stats.health -= other.speed / 5;
-            this.body.setScale(this.stats.health / 100);
-            if (this.stats.health <= 30) {
+            this._stats.health -= other.speed / 5;
+            this.body.setScale(this._stats.health / 100);
+            if (this._stats.health <= 30) {
                 this.destroy();
             }
         }
