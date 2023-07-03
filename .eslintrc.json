@@ -11,12 +11,14 @@
 			"rules": {
 				"@typescript-eslint/naming-convention": "off",
 				"no-empty-function": "off",
-				"@typescript-eslint/no-empty-function": "off"
+				"@typescript-eslint/no-empty-function": "off",
+				"no-mixed-operators": "off"
 			}
 		}
 	],
 	"parserOptions": {
 		"ecmaVersion": "latest",
 		"sourceType": "module"
-	}
+	},
+	"ignorePatterns": ["/*", "!/src"]
 }
