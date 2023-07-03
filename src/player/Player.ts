@@ -1,4 +1,3 @@
-
 import {SATVector} from 'detect-collisions';
 import {AsyncEE} from './../util/AsyncEE.js';
 import type {ITickData} from '../types.js';
@@ -23,5 +22,5 @@ export default abstract class Player<T extends Entity = Entity> {
 }
 
 export type PlayerEventMap = {
-	'ready': () => void;
+	ready: () => void;
 };

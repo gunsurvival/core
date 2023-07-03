@@ -41,42 +41,49 @@ export default abstract class World {
 			entity.update(this, tickData);
 			this.physics.updateBody(entity.body);
 
-			this.physics.checkOne(entity.body, ({...response}: ResponseBodyRefEntity) => {
-				const entityA = response.a.entitiyRef;
-				const entityB = response.b.entitiyRef;
+			this.physics.checkOne(
+				entity.body,
+				({...response}: ResponseBodyRefEntity) => {
+					const entityA = response.a.entitiyRef;
+					const entityB = response.b.entitiyRef;
 
-				if (entityA && entityB) {
-					if (entityA.isStatic && entityB.isStatic) {
-						// If current both entities are static, skip collision check
-						return;
-					}
+					if (entityA && entityB) {
+						if (entityA.isStatic && entityB.isStatic) {
+							// If current both entities are static, skip collision check
+							return;
+						}
 
-					const uniq = genId(entityA, entityB);
-					this.newCollisionHashMap.set(uniq, response);
-					if (this.collisionHashMap.has(uniq)) {
-						entity.onCollisionStay(entityB, response);
-					} else {
-						this.collisionHashMap.set(uniq, response);
-						entityA.onCollisionEnter(entityB, response);
-						entityA.event.emit('collision-enter', entityB).catch(console.error);
+						const uniq = genId(entityA, entityB);
+						this.newCollisionHashMap.set(uniq, response);
+						if (this.collisionHashMap.has(uniq)) {
+							entity.onCollisionStay(entityB, response);
+						} else {
+							this.collisionHashMap.set(uniq, response);
+							entityA.onCollisionEnter(entityB, response);
+							entityA.event
+								.emit('collision-enter', entityB)
+								.catch(console.error);
+						}
 					}
-				}
-			});
+				},
+			);
 
 			entity.afterUpdate(this, tickData);
 		});
-		this.collisionHashMap.forEach((response: ResponseBodyRefEntity, uniq: string) => {
-			if (!this.newCollisionHashMap.has(uniq)) {
-				const entityA = response.a.entitiyRef;
-				const entityB = response.b.entitiyRef;
-				if (entityA && entityB) {
-					const uniq = genId(entityA, entityB);
-					this.collisionHashMap.delete(uniq);
-					entityA.onCollisionExit(entityB, response);
-					entityA.event.emit('collision-exit', entityB).catch(console.error);
+		this.collisionHashMap.forEach(
+			(response: ResponseBodyRefEntity, uniq: string) => {
+				if (!this.newCollisionHashMap.has(uniq)) {
+					const entityA = response.a.entitiyRef;
+					const entityB = response.b.entitiyRef;
+					if (entityA && entityB) {
+						const uniq = genId(entityA, entityB);
+						this.collisionHashMap.delete(uniq);
+						entityA.onCollisionExit(entityB, response);
+						entityA.event.emit('collision-exit', entityB).catch(console.error);
+					}
 				}
-			}
-		});
+			},
+		);
 	}
 
 	setupEvents() {
@@ -87,7 +94,9 @@ export default abstract class World {
 				throw new Error(`Entity ${className} does not exist`);
 			}
 
-			const EntityClass = Entity[className as keyof typeof Entity] as (new (...args: any[]) => Entity.default);
+			const EntityClass = Entity[className as keyof typeof Entity] as new (
+				...args: any[]
+			) => Entity.default;
 			const entity = new EntityClass();
 			entity.init(initial);
 			this.add(entity);
@@ -96,7 +105,6 @@ export default abstract class World {
 		this.event.on('api:-entities', id => {
 			const entity = this.entities.get(id);
 			if (entity) {
-				console.log(id);
 				this.remove(entity);
 			}
 		});
@@ -105,7 +113,8 @@ export default abstract class World {
 	add(entity: Entity.default) {
 		this.physics.insert(entity.body);
 		this.entities.set(entity.id, entity);
-		(entity as (Entity.default & {body: BodyRefEntity})).body.entitiyRef = entity;
+		(entity as Entity.default & {body: BodyRefEntity}).body.entitiyRef
+			= entity;
 		// Need to reference the entity's id in the body because the body is passed to the System.checkOne callback, not the entity
 		entity.onAdd(this);
 		this.event.emit('+entities', entity).catch(console.error);
@@ -118,7 +127,10 @@ export default abstract class World {
 		this.event.emit('-entities', entity).catch(console.error);
 	}
 
-	async api<Ev extends keyof WorldEventMap>(type: Ev, ...args: Parameters<WorldEventMap[Ev]>) {
+	async api<Ev extends keyof WorldEventMap>(
+		type: Ev,
+		...args: Parameters<WorldEventMap[Ev]>
+	) {
 		if (this.lockApi) {
 			return;
 		}
@@ -132,7 +144,10 @@ export default abstract class World {
 }
 
 export type WorldEventMap = {
-	'api:+entities': (className: string, initial: Record<string, unknown>) => Entity.default;
+	'api:+entities': (
+		className: string,
+		initial: Record<string, unknown>
+	) => Entity.default;
 	'api:-entities': (id: string) => void;
 	'+entities': (entity: Entity.default) => void;
 	'-entities': (entity: Entity.default) => void;

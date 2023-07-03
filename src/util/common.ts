@@ -1,7 +1,7 @@
 import type Entity from '../entity/Entity.js';
 
 export function lerp(start: number, end: number, amt: number) {
-	return ((1 - amt) * start) + (amt * end);
+	return (1 - amt) * start + amt * end;
 }
 
 export function lerpAngle(start: number, end: number, amt: number) {
@@ -15,12 +15,12 @@ export function lerpAngle(start: number, end: number, amt: number) {
 			beta,
 		},
 		{
-			result: Math.abs(alpha - (beta + (2 * Math.PI))),
-			beta: beta + (2 * Math.PI),
+			result: Math.abs(alpha - (beta + 2 * Math.PI)),
+			beta: beta + 2 * Math.PI,
 		},
 		{
-			result: Math.abs(alpha - (beta - (2 * Math.PI))),
-			beta: beta - (2 * Math.PI),
+			result: Math.abs(alpha - (beta - 2 * Math.PI)),
+			beta: beta - 2 * Math.PI,
 		},
 	];
 	rotates.sort((a, b) => a.result - b.result);

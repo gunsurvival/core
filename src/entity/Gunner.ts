@@ -22,16 +22,16 @@ export default class Gunner extends Entity {
 		this.inventory.addItem(new Item.Revolver()).catch(console.error);
 	}
 
-	update(world: World, tickData: ITickData): void {
-
-	}
+	update(world: World, tickData: ITickData): void {}
 
 	onCollisionEnter(other: Entity, response: Response) {
 		if (other instanceof Bullet) {
-			this._stats.health -= (other).speed;
+			this._stats.health -= other.speed;
 			if (this._stats.health <= 0) {
 				this._stats.health = 0;
 			}
+
+			other.destroy();
 		}
 
 		if (other instanceof Bush) {

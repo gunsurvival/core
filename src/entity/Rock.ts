@@ -1,6 +1,6 @@
 import {type Response, Circle, SATVector, type Body} from 'detect-collisions';
 import Entity from './Entity.js';
-import {type stats, getStats} from '../stats.js';
+import {getStats} from '../stats.js';
 import type Bullet from './Bullet.js';
 import {type ITickData} from '../types.js';
 import type World from '../world/World.js';
@@ -11,8 +11,7 @@ export default class Rock extends Entity {
 	body = new Circle(new SATVector(0, 0), this.stats.radius);
 	isStatic = true;
 
-	update(world: World, tickData: ITickData): void {
-	}
+	update(world: World, tickData: ITickData): void {}
 
 	onCollisionEnter(other: Entity, response: Response): void {
 		if (other.constructor.name === 'Bullet') {

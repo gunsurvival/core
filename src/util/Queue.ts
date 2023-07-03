@@ -1,8 +1,11 @@
 export class Queue {
-	private readonly _queue: Array<{id: string; resolve: (data: any) => void; reject: (data: any) => void}> = [];
+	private readonly _queue: Array<{
+		id: string;
+		resolve: (data: any) => void;
+		reject: (data: any) => void;
+	}> = [];
 
-	constructor(public timeout = 0) {
-	}
+	constructor(public timeout = 0) {}
 
 	async create(id: string): Promise<void> {
 		return new Promise((resolve, reject) => {

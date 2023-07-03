@@ -20,7 +20,11 @@ export default abstract class Gun extends Item {
 		this.coolDownSystem.update(tickData);
 	}
 
-	async primaryAction(player: PlayerCasual<Gunner>, world: World, tickData: ITickData) {
+	async primaryAction(
+		player: PlayerCasual<Gunner>,
+		world: World,
+		tickData: ITickData,
+	) {
 		if (this.coolDownSystem.isReady('primary')) {
 			this.coolDownSystem.add('primary', this.stats.autoCD);
 			await this.fire(player, world, tickData);
@@ -31,14 +35,16 @@ export default abstract class Gun extends Item {
 	async fire(player: PlayerCasual, world: World, tickData: ITickData) {
 		if (!world.isOnline) {
 			// Only create bullet if playing locally (to ignore two bullets being created from server & client)
-			const tolerance = random.normal(0, Math.PI / (this.stats.tolerance / (1 + player.entity.vel.len())));
-			console.log(player.entity.vel.len());
+			const tolerance = random.normal(
+				0,
+				Math.PI / (this.stats.tolerance / (1 + player.entity.vel.len())),
+			);
 			await world.api('api:+entities', 'Bullet', {
 				id: safeId(),
 				ownerId: player.entity.id,
 				pos: {
-					x: player.entity.body.pos.x + Math.cos(player.entity.body.angle) * 60,
-					y: player.entity.body.pos.y + Math.sin(player.entity.body.angle) * 60,
+					x: player.entity.body.pos.x + Math.cos(player.entity.body.angle) * 70,
+					y: player.entity.body.pos.y + Math.sin(player.entity.body.angle) * 70,
 				},
 				angle: player.entity.body.angle + Number(tolerance()),
 				speed: 30,

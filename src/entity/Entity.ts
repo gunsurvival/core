@@ -23,7 +23,7 @@ export default abstract class Entity {
 	isStatic = false; // Skip collision check
 
 	abstract body: Body; // Server state: This is relate to physic so no need to use custom mutate variable, changes auto assign it at end of update
-	abstract stats: typeof EntityStats ; // Dynamic stats, this is used to calculate new stats with effects that have a duration
+	abstract stats: typeof EntityStats; // Dynamic stats, this is used to calculate new stats with effects that have a duration
 	abstract _stats: typeof EntityStats; // Base stats, this is used to calculate dynamic stats, changed permanently
 
 	beforeUpdate(world: World, tickData: ITickData) {
@@ -46,9 +46,7 @@ export default abstract class Entity {
 		this.inventory.update(tickData);
 	}
 
-	afterUpdate(world: World, tickData: ITickData) {
-
-	}
+	afterUpdate(world: World, tickData: ITickData) {}
 
 	destroy() {
 		this.markAsRemove = true;
@@ -62,12 +60,11 @@ export default abstract class Entity {
 	onCollisionExit(other: Entity, response: Response) {}
 
 	init(data: Record<string, unknown>) {
-		const {id, scale, angle, pos, offset, vel} = data as {
+		const {id, scale, angle, pos, vel} = data as {
 			id: string;
 			scale: number;
 			angle: number;
 			pos: {x: number; y: number};
-			offset: {x: number; y: number};
 			vel: {x: number; y: number};
 		};
 		if (id) {
@@ -84,10 +81,6 @@ export default abstract class Entity {
 
 		if (pos) {
 			this.body.setPosition(pos.x, pos.y);
-		}
-
-		if (offset) {
-			this.body.setOffset(new SATVector(offset.x, offset.y));
 		}
 
 		if (vel) {

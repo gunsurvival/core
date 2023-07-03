@@ -66,4 +66,3 @@ export type EventNames<Map extends EventsMap> = keyof Map & string;
 
 /** The tuple type representing the handler of an event listener */
 export type EventHandler<Params extends any[]> = (...args: Params) => unknown;
-

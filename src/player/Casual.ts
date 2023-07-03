@@ -1,4 +1,3 @@
-
 import type {ITickData} from '../types.js';
 import type World from '../world/World.js';
 import Player, {type PlayerEventMap} from './Player.js';
@@ -47,9 +46,7 @@ export default class Casual<T extends Entity = Entity> extends Player<T> {
 		return new SATVector(
 			this.state.keyboard.a ? -1 : this.state.keyboard.d ? 1 : 0,
 			this.state.keyboard.w ? -1 : this.state.keyboard.s ? 1 : 0,
-		).scale(
-			(1 / Math.sqrt(2)) * this.speed,
-		);
+		).scale((1 / Math.sqrt(2)) * this.speed);
 	}
 
 	get speed() {
@@ -58,5 +55,5 @@ export default class Casual<T extends Entity = Entity> extends Player<T> {
 }
 
 type CasualPlayerEventMap = PlayerEventMap & {
-	'shoot': () => void;
+	shoot: () => void;
 };
