@@ -35,8 +35,8 @@ export default class Gunner extends Entity {
 		}
 
 		if (other instanceof Bush) {
-			if (!this.effects.get('slow-on-bush')) {
-				this.addEffect('slow-on-bush', new Slow(0.5));
+			if (!this.effects.get(`slow-on-bush#${other.id}`)) {
+				this.addEffect(`slow-on-bush#${other.id}`, new Slow(0.5));
 			}
 		}
 	}
@@ -52,7 +52,7 @@ export default class Gunner extends Entity {
 
 	onCollisionExit(other: Entity, response: Response) {
 		if (other instanceof Bush) {
-			this.removeEffect('slow-on-bush');
+			this.removeEffect(`slow-on-bush#${other.id}`);
 		}
 	}
 }
