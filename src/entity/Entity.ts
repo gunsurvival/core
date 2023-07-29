@@ -41,8 +41,11 @@ export default abstract class Entity {
 			effect.calc(this, world, tickData);
 		});
 
-		this.body.pos.x += this.vel.x * tickData.delta;
-		this.body.pos.y += this.vel.y * tickData.delta;
+		this.body.setPosition(
+			this.body.x + this.vel.x * tickData.delta,
+			this.body.y + this.vel.y * tickData.delta,
+		);
+
 		this.inventory.update(tickData);
 	}
 
