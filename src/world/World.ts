@@ -1,4 +1,12 @@
 import {System, type Body, type Response} from 'detect-collisions';
+import {
+	breakIntersections,
+	convertToSegments,
+	compute,
+	computeViewport,
+	inPolygon,
+	Polygon,
+} from 'visibility-polygon';
 import * as Entity from '../entity/index.js';
 import {type ITickData} from '../types.js';
 import {AsyncEE, genId} from '../util/index.js';
